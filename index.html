@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,37 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
-/* --- Tela de seleção de avatar --- */
-#avatar-screen {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: radial-gradient(circle at center, #1a0040, #000);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+/* Fonte Tungsten Bold */
+@font-face {
+    font-family: 'TungstenBold';
+    src: url('Tungsten-Bold.ttf') format('truetype');
 }
-#avatar-screen h1 { color:#ff66ff; margin-bottom:20px; }
-.avatar-carousel { display:flex; align-items:center; gap:10px; }
-.arrow-btn {
-  background:none; border:none; color:#ff66ff; font-size:2em; cursor:pointer;
+body {
+    font-family: Arial, sans-serif;
+    background: url('IMG_2223.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    color:#f0f0f0;
+    margin:0;
+    padding:0;
 }
-.avatar-grid { display:flex; gap:10px; }
-.avatar {
-  width:80px; height:80px; border-radius:12px; overflow:hidden; cursor:pointer;
-  border:2px solid transparent; transition: transform 0.3s, border 0.3s;
-}
-.avatar img { width:100%; height:100%; object-fit:cover; }
-.avatar.selected { border:2px solid #ff66ff; transform:scale(1.1); }
-
-/* --- Site normal --- */
-body { margin:0; font-family:Arial, sans-serif; background:#000; color:#fff; }
-#main-site { display:none; padding:20px; }
-.avatar-post { width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:6px; }
-
-/* --- Seu CSS original --- */
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
     font-weight: normal;
@@ -56,8 +39,17 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-h2 { margin-top:1.5em; color:#ffbb33; }
-input, button { font-size:1em; border-radius:12px; border:none; padding:0.8em; margin-bottom:0.5em; }
+h2 {
+    margin-top:1.5em;
+    color:#ffbb33;
+}
+input, button {
+    font-size:1em;
+    border-radius:12px;
+    border:none;
+    padding:0.8em;
+    margin-bottom:0.5em;
+}
 input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
     width:100%;
     background: rgba(255,255,255,0.1);
@@ -66,8 +58,14 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
     backdrop-filter: blur(6px);
     transition: border 0.3s, background 0.3s;
 }
-input::placeholder { color:#ccc; }
-input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
+input::placeholder {
+    color:#ccc;
+}
+input:focus {
+    border:1px solid #ffbb33;
+    background: rgba(255,255,255,0.2);
+    outline:none;
+}
 button {
     background: linear-gradient(135deg, #ff4d4d, #ffbb33);
     color: #fff;
@@ -95,33 +93,73 @@ button:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.6);
 }
-.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
-.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
-.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px; }
-.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s; }
-.delete-btn:hover { background:#e04343; transform: scale(1.05); }
-.post.own { border: 2px solid #ffbb33; }
-.tag-box { display: inline-block; background: rgba(255,187,51,0.2); color: #ffbb33; padding: 4px 10px; margin: 3px 3px 0 0; border-radius: 8px; font-size: 0.85em; }
-#searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
-#searchInput:focus { outline:none; border:1px solid #ffbb33; }
+.author {
+    font-weight:bold;
+    color:#ffbb33;
+    margin-bottom:0.5em;
+}
+.video-container {
+    position:relative;
+    width:100%;
+    height:0;
+    padding-bottom:56.25%;
+    margin-top:0.5em;
+}
+.video-container iframe {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:none;
+    border-radius:8px;
+}
+.delete-btn {
+    margin-top:0.5em;
+    background:#ff5555;
+    color:#fff;
+    border:none;
+    padding:0.5em 1em;
+    border-radius:8px;
+    cursor:pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+.delete-btn:hover {
+    background:#e04343;
+    transform: scale(1.05);
+}
+.post.own {
+    border: 2px solid #ffbb33;
+}
+.tag-box {
+    font-family: 'TungstenBold', Arial, sans-serif;
+    display: inline-block;
+    background: rgba(255,187,51,0.2);
+    color: #ffbb33;
+    padding: 4px 10px;
+    margin: 3px 3px 0 0;
+    border-radius: 8px;
+    font-size: 0.85em;
+}
+#searchInput {
+    width:100%;
+    padding:0.8em;
+    margin-bottom:1em;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+}
+#searchInput:focus {
+    outline:none;
+    border:1px solid #ffbb33;
+}
 </style>
 </head>
 <body>
-
-<!-- Tela de avatar -->
-<div id="avatar-screen">
-  <h1>Escolha seu avatar</h1>
-  <div class="avatar-carousel">
-    <button class="arrow-btn" id="prevBtn">&#8592;</button>
-    <div class="avatar-grid" id="avatarGrid"></div>
-    <button class="arrow-btn" id="nextBtn">&#8594;</button>
-  </div>
-</div>
-
-<!-- Conteúdo do site -->
-<div id="main-site">
 <header>Autodance Share Online</header>
 <main>
+
 <h2>Login / Registro</h2>
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="senha" placeholder="Senha">
@@ -139,8 +177,8 @@ button:hover {
 <h2>Autodances enviadas</h2>
 <div id="posts"></div>
 </main>
-</div>
 
+<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -155,6 +193,7 @@ const firebaseConfig = {
   messagingSenderId: "960760470726",
   appId: "1:960760470726:web:f5af55d01df6a2be0d4bc7"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -170,160 +209,107 @@ const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
-let userAvatar = null;
 
-// --- Avatares ---
-const avatarFolder = "./Just dance avatars/";
-const avatarFiles = [
-  "All I Want for Christmas Is You.png",
-  "American Girl.png",
-  "Applause (Stage).png",
-  "Applause.png",
-  "Aquarius Let The Sunshine In (P1).png",
-  "Aquarius Let The Sunshine In (P2).png"
-  // adicionar todos os outros
-];
-let currentPage = 0;
-const avatarsPerPage = 6;
+// Palavras impróprias
+const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-const avatarGrid = document.getElementById("avatarGrid");
-function renderAvatars(){
-  avatarGrid.innerHTML="";
-  const start = currentPage*avatarsPerPage;
-  const end = Math.min(start + avatarsPerPage, avatarFiles.length);
-  for(let i=start;i<end;i++){
-    const div=document.createElement("div");
-    div.className="avatar";
-    div.innerHTML=`<img src="${avatarFolder + encodeURIComponent(avatarFiles[i])}" alt="avatar">`;
-    div.onclick=()=>selectAvatar(div, avatarFolder + avatarFiles[i]);
-    avatarGrid.appendChild(div);
-  }
-}
-document.getElementById("prevBtn").onclick=()=>{ if(currentPage>0) currentPage--; renderAvatars(); };
-document.getElementById("nextBtn").onclick=()=>{ if((currentPage+1)*avatarsPerPage<avatarFiles.length) currentPage++; renderAvatars(); };
-
-function selectAvatar(element, path){
-  document.querySelectorAll(".avatar").forEach(a=>a.classList.remove("selected"));
-  element.classList.add("selected");
-  userAvatar = path;
-  localStorage.setItem("selectedAvatar", path);
-
-  // Oculta tela de avatar e mostra site
-  document.getElementById("avatar-screen").style.display="none";
-  document.getElementById("main-site").style.display="block";
-}
-
-// --- Firebase login / registro ---
+// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
-  const email = emailInput.value.trim();
-  const senha = senhaInput.value.trim();
-  if(!email||!senha){alert("Preencha email e senha!"); return;}
-  try{ await signInWithEmailAndPassword(auth,email,senha); }
-  catch(e){ 
-    try{ await createUserWithEmailAndPassword(auth,email,senha); }
-    catch(err){ alert(err.message); return; }
-  }
+    const email = emailInput.value.trim();
+    const senha = senhaInput.value.trim();
+    if(!email||!senha){alert("Preencha email e senha!"); return;}
+    try{ await signInWithEmailAndPassword(auth,email,senha); }
+    catch(e){ 
+        try{ await createUserWithEmailAndPassword(auth,email,senha); }
+        catch(err){ alert(err.message); return; }
+    }
 });
 
 // Detecta login
 onAuthStateChanged(auth,user=>{
-  if(user){
-    currentUser=user;
-    authorInput.value = user.email.split("@")[0];
-    authorInput.disabled=false;
-    videoInput.disabled=false;
-    tagsInput.disabled=false;
-    postBtn.disabled=false;
-    loginBtn.disabled=true;
-    emailInput.disabled=true;
-    senhaInput.disabled=true;
-    loadPosts();
-  } else {
-    currentUser=null;
-    authorInput.disabled=true;
-    videoInput.disabled=true;
-    tagsInput.disabled=true;
-    postBtn.disabled=true;
-    loginBtn.disabled=false;
-    emailInput.disabled=false;
-    senhaInput.disabled=false;
-    postsContainer.innerHTML="";
-  }
+    if(user){
+        currentUser=user;
+        authorInput.value = user.email.split("@")[0];
+        authorInput.disabled=false;
+        videoInput.disabled=false;
+        tagsInput.disabled=false;
+        postBtn.disabled=false;
+        loginBtn.disabled=true;
+        emailInput.disabled=true;
+        senhaInput.disabled=true;
+        loadPosts();
+    } else {
+        currentUser=null;
+        authorInput.disabled=true;
+        videoInput.disabled=true;
+        tagsInput.disabled=true;
+        postBtn.disabled=true;
+        loginBtn.disabled=false;
+        emailInput.disabled=false;
+        senhaInput.disabled=false;
+        postsContainer.innerHTML="";
+    }
 });
 
-// Postar
+// Adiciona post
 postBtn.addEventListener("click", async ()=>{
-  const author = authorInput.value;
-  const video = videoInput.value.trim();
-  let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
-  if(!video.includes("streamable.com")){ alert("Só Streamable!"); return;}
-  const postRef = push(ref(db,"posts"));
-  await set(postRef,{author,video,tags,uid:currentUser.uid,avatar:userAvatar});
-  videoInput.value=""; tagsInput.value="";
+    const author = authorInput.value;
+    const video = videoInput.value.trim();
+    let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
+    if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
+    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
+    const postRef = push(ref(db,"posts"));
+    await set(postRef,{author,video,tags,uid:currentUser.uid});
+    videoInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
 function loadPosts(){
-  onValue(ref(db,"posts"),snapshot=>{
-    postsContainer.innerHTML="";
-    const data = snapshot.val();
-    if(!data) return;
-    Object.entries(data).reverse().forEach(([key,post])=>{
-      const div = document.createElement("div");
-      div.className="post";
-      if(post.uid===currentUser.uid) div.classList.add("own");
-      div.innerHTML=`
-        <div class="author">
-          ${post.avatar ? `<img src="${post.avatar}" class="avatar-post">` : ""}
-          ${post.author}:
-        </div>
-        <div class="video-container">
-          <iframe src="${post.video}" allowfullscreen></iframe>
-        </div>
-      `;
-      if(post.tags&&post.tags.length){
-        const tagsContainer=document.createElement("div");
-        tagsContainer.style.marginTop="0.5em";
-        post.tags.forEach(tag=>{
-          const tagBox=document.createElement("span");
-          tagBox.className="tag-box";
-          tagBox.textContent=tag;
-          tagsContainer.appendChild(tagBox);
+    onValue(ref(db,"posts"),snapshot=>{
+        postsContainer.innerHTML="";
+        const data = snapshot.val();
+        if(!data) return;
+        Object.entries(data).reverse().forEach(([key,post])=>{
+            const div = document.createElement("div");
+            div.className="post";
+            if(post.uid===currentUser.uid) div.classList.add("own");
+            div.innerHTML=`
+                <div class="author">${post.author}:</div>
+                <div class="video-container">
+                    <iframe src="${post.video}" allowfullscreen></iframe>
+                </div>
+            `;
+            if(post.tags&&post.tags.length){
+                const tagsContainer=document.createElement("div");
+                tagsContainer.style.marginTop="0.5em";
+                post.tags.forEach(tag=>{
+                    const tagBox=document.createElement("span");
+                    tagBox.className="tag-box";
+                    tagBox.textContent=tag;
+                    tagsContainer.appendChild(tagBox);
+                });
+                div.appendChild(tagsContainer);
+            }
+            if(post.uid===currentUser.uid){
+                const delBtn=document.createElement("button");
+                delBtn.textContent="Excluir";
+                delBtn.className="delete-btn";
+                delBtn.onclick=()=>remove(ref(db,"posts/"+key));
+                div.appendChild(delBtn);
+            }
+            postsContainer.appendChild(div);
         });
-        div.appendChild(tagsContainer);
-      }
-      if(post.uid===currentUser.uid){
-        const delBtn=document.createElement("button");
-        delBtn.textContent="Excluir";
-        delBtn.className="delete-btn";
-        delBtn.onclick=()=>remove(ref(db,"posts/"+key));
-        div.appendChild(delBtn);
-      }
-      postsContainer.appendChild(div);
     });
-  });
 }
 
-// Filtrar tags
+// Filtrar pesquisa
 searchInput.addEventListener("input", ()=>{
-  const filter = searchInput.value.trim().toLowerCase();
-  const posts = postsContainer.querySelectorAll(".post");
-  posts.forEach(p=>{
-    const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
-    p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
-  });
-});
-
-// Avatar salvo
-document.addEventListener("DOMContentLoaded", ()=>{
-  const savedAvatar = localStorage.getItem("selectedAvatar");
-  if(savedAvatar){
-    userAvatar = savedAvatar;
-    document.getElementById("avatar-screen").style.display="none";
-    document.getElementById("main-site").style.display="block";
-  } else {
-    renderAvatars();
-  }
+    const filter = searchInput.value.trim().toLowerCase();
+    const posts = postsContainer.querySelectorAll(".post");
+    posts.forEach(p=>{
+        const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
+    });
 });
 </script>
 </body>
