@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodance Share Online</title>
+<style>
+@font-face {
+    font-family: 'TungstenBold';
+    src: url('Tungsten-Bold.ttf') format('truetype');
+}
+body { font-family: Arial, sans-serif; background:#1a1a1a; color:#f0f0f0; margin:0; padding:0; }
+header { font-family: 'TungstenBold', Arial, sans-serif; padding:1em; text-align:center; font-size:2em; }
+main { max-width:800px; margin:2em auto; padding:1em; }
+input, button { padding:0.7em; margin-bottom:1em; border-radius:5px; border:none; }
+input[type="text"], input[type="url"] { width:100%; margin-bottom:0.5em; }
+button { background:#ff4d4d; color:#fff; cursor:pointer; }
+button:hover { background:#e04343; }
+.post { background:#333; padding:1em; border-radius:8px; margin-bottom:1em; }
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.delete-btn { margin-top:0.5em; background:#ff5555; }
+.delete-btn:hover { background:#e04343; }
+</style>
+</head>
+<body>
+<header>Autodance Share Online</header>
+<main>
+<h2>Poste sua autodance</h2>
+<input type="text" id="author" placeholder="Seu nome">
+<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)">
+<button onclick="addPost()">Postar</button>
+
+<h2>Autodances enviadas</h2>
+<div id="posts"></div>
+</main>
+
+<script>
+const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a';
+const JSONBIN_KEY = '$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC';
+
+// Carrega posts do bin
+async function loadPosts() {
+    const container = document.getElementById('posts');
+    container.innerHTML = '';
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
+
+        posts.slice().reverse().forEach((post, index) => {
+            const div = document.createElement('div');
+            div.classList.add('post');
+            div.innerHTML = `
+                <div class="author">${post.author}:</div>
+                <div class="video-container">
+                    <iframe src="${post.video}" allowfullscreen></iframe>
+                </div>
+            `;
+
+            // TEMPORÁRIO: mostra botão de excluir para TODOS os posts
+            const btn = document.createElement('button');
+            btn.textContent = 'Excluir';
+            btn.className = 'delete-btn';
+            btn.onclick = () => deletePost(posts.length - 1 - index);
+            div.appendChild(btn);
+
+            container.appendChild(div);
+        });
+    } catch (e) {
+        console.error('Erro ao carregar posts:', e);
+    }
+}
+
+// Adiciona novo post
+async function addPost() {
+    const author = document.getElementById('author').value.trim() || 'Anônimo';
+    const videoUrl = document.getElementById('videoUrl').value.trim();
+    if (!videoUrl) { alert('Cole o embed do Streamable!'); return; }
+
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
+
+        // TEMPORÁRIO: comentado para permitir nomes repetidos
+        // if (posts.some(p => p.author === author)) { alert('Nome já existe!'); return; }
+
+        posts.push({ author, video: videoUrl });
+
+        await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+            body: JSON.stringify(posts)
+        });
+
+        document.getElementById('videoUrl').value = '';
+        loadPosts();
+    } catch (e) {
+        console.error('Erro ao postar:', e);
+        alert('Não foi possível postar. Confira sua Master Key.');
+    }
+}
+
+// Exclui post
+async function deletePost(i) {
+    if (!confirm("Tem certeza que quer excluir este post?")) return;
+
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
+
+        posts.splice(i, 1); // Remove o post
+        await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+            body: JSON.stringify(posts)
+        });
+
+        loadPosts();
+    } catch (e) {
+        console.error('Erro ao excluir:', e);
+        alert('Não foi possível excluir o post.');
+    }
+}
+
+// Inicializa feed
+loadPosts();
+</script>
+</body>
+</html>
