@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -153,79 +154,11 @@ button:hover {
     outline:none;
     border:1px solid #ffbb33;
 }
-
-/* CARROSSEL DE AVATAR ESTILO JD2014 */
-#avatar-selection {
-    position: fixed;
-    top:0; left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.95);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-    color:#ffbb33;
-}
-.avatar-carousel {
-    display:flex;
-    align-items:center;
-    margin-top:2em;
-}
-.avatars-container {
-    display:flex;
-    overflow:hidden;
-    width:600px;
-    perspective:1000px;
-}
-.avatar-container {
-    flex:0 0 auto;
-    width:100px;
-    height:100px;
-    margin:0 5px;
-    border-radius:12px;
-    transition: transform 0.4s, opacity 0.4s;
-    cursor:pointer;
-}
-.avatar-container img {
-    width:100%;
-    height:100%;
-    border-radius:12px;
-    object-fit:cover;
-    display:block;
-}
-.avatar-container.center {
-    transform: scale(1.6) translateY(-10px);
-    z-index:2;
-    opacity:1;
-}
-.avatar-container.side {
-    transform: scale(1) translateY(0);
-    z-index:1;
-    opacity:0.6;
-}
-.confirm-btn {
-    margin-top:1.5em; padding:0.8em 1.5em; font-weight:bold;
-}
 </style>
 </head>
 <body>
-
-<!-- TELA DE AVATAR -->
-<div id="avatar-selection">
-    <h2>Escolha seu Avatar</h2>
-    <div class="avatar-carousel">
-        <button id="prev-avatar">&#8592;</button>
-        <div class="avatars-container" id="avatars-container"></div>
-        <button id="next-avatar">&#8594;</button>
-    </div>
-    <button id="confirm-avatar" class="confirm-btn">Confirmar</button>
-</div>
-
-<!-- TELA PRINCIPAL -->
-<main id="main-site" style="display:none;">
 <header>Autodance Share Online</header>
+<main>
 
 <h2>Login / Registro</h2>
 <input type="email" id="email" placeholder="Email">
@@ -276,6 +209,8 @@ const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
+
+// Palavras impróprias
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
 // Login / criar conta
@@ -376,80 +311,6 @@ searchInput.addEventListener("input", ()=>{
         p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
     });
 });
-
-// --- CARROSSEL AVATAR ---
-const avatarFiles = [
-"All I Want for Christmas Is You.png","American Girl.png","Applause (Stage).png","Applause.png","Aquarius Let The Sunshine In (P1).png",
-"Aquarius Let The Sunshine In (P2).png","Blame It on the Boogie (P3).png","Blurred Lines (Extreme).png","Blurred Lines (P1).png",
-"Blurred Lines (P2).png","Candy (P2).png","Can’t Get Enough.png","Can’t Hold Us.png","Careless Whisper (P1).png","Could You Be Loved (P1).png",
-"C’mon (P1).png","C’mon (P2).png","Dançando (Fankit Avatar).png","Dançando.png","Danse (Pop Version).png","Don’t You Worry Child.png",
-"Feel So Right.png","Feel This Moment.png","Fine China (Extreme).png","Fine China.png","Flashdance... What a Feeling.png","Follow the Leader.png",
-"Gentleman (C1).png","Gentleman (C2).png","Gentleman (Sweat).png","Get Lucky (P1).png","Get Lucky (P2).png","Ghostbusters (P1).png",
-"Ghostbusters (P2).png","Ghostbusters (P3).png","Ghostbusters (P4).png","Ghostbusters (Sweat).png","Gimme! Gimme! Gimme! (A Man After Midnight) (On-Stage).png",
-"Gimme! Gimme! Gimme! (A Man After Midnight).png","I Kissed a Girl (Sing Along).png","I Kissed a Girl (Sweat).png","I Kissed a Girl.png",
-"I Need Your Love.png","I Will Survive (On-Stage).png","I Will Survive.png","In the Summertime.png","Isidora.png","It’s You (Sweat).png",
-"It’s You.png","Just A Gigolo (P1).png","Just A Gigolo (P2).png","Just Dance (C1).png","Just Dance (C2).png","Just Dance (Sing Along).png",
-"Just Dance (Sweat).png","Kiss You (6-Player) (P1).png","Kiss You (P2).png","Kiss You (P3).png","Limbo (P1).png","Limbo (P2).png","Love Boat.png",
-"María.png","Miss Understood.png","Moskau (P1).png","My Main Girl.png","Nitro Bot (P1).png","Nitro Bot (P2).png","One Way Or Another (Teenage Kicks).png",
-"Pound The Alarm (Extreme).png","Pound The Alarm (P3).png","Prince Ali (P4).png","Rich Girl.png","Roar.png","Rock n Roll.png","Safe And Sound (C1).png",
-"Sexy And I Know It.png","She Wolf (Falling to Pieces).png","Starships (Charleston) (P1).png","Starships.png","The Other Side.png",
-"The Way (P2).png","The World is Ours.png","Timber (P1).png","Timber (P2).png","Troublemaker.png","Turn Up The Love (P1).png",
-"Turn Up The Love (Sumo) (P3).png","Wake Me Up (C1).png","Wake Me Up (C2).png","Waking Up in Vegas.png","We Can’t Stop.png","What About Love.png",
-"Where Have You Been.png","Wild.png","Y.M.C.A. (P1).png","Y.M.C.A. (P2).png","Y.M.C.A. (P3).png","Y.M.C.A. (P4).png"
-];
-
-const avatarsContainer = document.getElementById("avatars-container");
-let centerIndex = 0;
-
-// Cria elementos dos avatares
-avatarFiles.forEach((file,i)=>{
-    const div = document.createElement("div");
-    div.className="avatar-container";
-    const img = document.createElement("img");
-    img.src = `/Just dance avatars/${file}`;
-    div.appendChild(img);
-    div.addEventListener("click", ()=>{
-        centerIndex = i;
-        updateCarousel();
-    });
-    avatarsContainer.appendChild(div);
-});
-
-// Atualiza visual do carrossel
-function updateCarousel(){
-    const children = avatarsContainer.children;
-    for(let i=0;i<children.length;i++){
-        const diff = i - centerIndex;
-        if(diff===0){
-            children[i].className="avatar-container center";
-        } else if(diff===-1 || diff===1){
-            children[i].className="avatar-container side";
-        } else {
-            children[i].className="avatar-container";
-            children[i].style.opacity=0.3;
-        }
-    }
-    const scrollPos = (centerIndex - 1) * 110;
-    avatarsContainer.scrollTo({left:scrollPos, behavior:"smooth"});
-}
-
-// Botões de navegação
-document.getElementById("prev-avatar").addEventListener("click", ()=>{
-    if(centerIndex>0){ centerIndex--; updateCarousel(); }
-});
-document.getElementById("next-avatar").addEventListener("click", ()=>{
-    if(centerIndex<avatarFiles.length-1){ centerIndex++; updateCarousel(); }
-});
-
-// Confirmar avatar
-document.getElementById("confirm-avatar").addEventListener("click", ()=>{
-    localStorage.setItem("selectedAvatar", `/Just dance avatars/${avatarFiles[centerIndex]}`);
-    document.getElementById("avatar-selection").style.display="none";
-    document.getElementById("main-site").style.display="block";
-});
-
-// Inicializa
-updateCarousel();
 </script>
 </body>
 </html>
