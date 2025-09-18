@@ -10,6 +10,7 @@
     font-family: 'TungstenBold';
     src: url('Tungsten-Bold.ttf') format('truetype');
 }
+
 body {
     font-family: Arial, sans-serif;
     background: url('IMG_2223.jpeg') no-repeat center center fixed;
@@ -18,6 +19,7 @@ body {
     margin:0;
     padding:0;
 }
+
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
     font-weight: normal;
@@ -30,6 +32,7 @@ header {
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     border-radius: 0 0 12px 12px;
 }
+
 main {
     max-width: 900px;
     margin: 2em auto;
@@ -38,10 +41,12 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
+
 h2 {
     margin-top:1.5em;
     color:#ffbb33;
 }
+
 input, button {
     font-size:1em;
     border-radius:12px;
@@ -49,6 +54,7 @@ input, button {
     padding:0.8em;
     margin-bottom:0.5em;
 }
+
 input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
     width:100%;
     background: rgba(255,255,255,0.1);
@@ -57,14 +63,17 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
     backdrop-filter: blur(6px);
     transition: border 0.3s, background 0.3s;
 }
+
 input::placeholder {
     color:#ccc;
 }
+
 input:focus {
     border:1px solid #ffbb33;
     background: rgba(255,255,255,0.2);
     outline:none;
 }
+
 button {
     background: linear-gradient(135deg, #ff4d4d, #ffbb33);
     color: #fff;
@@ -73,11 +82,13 @@ button {
     transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     padding:0.8em 1.5em;
 }
+
 button:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(255,187,51,0.6);
     background: linear-gradient(135deg, #ffbb33, #ff4d4d);
 }
+
 .post {
     background: rgba(30,30,30,0.4);
     backdrop-filter: blur(8px);
@@ -88,15 +99,18 @@ button:hover {
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
 }
+
 .post:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.6);
 }
+
 .author {
     font-weight:bold;
     color:#ffbb33;
     margin-bottom:0.5em;
 }
+
 .video-container {
     position:relative;
     width:100%;
@@ -104,6 +118,7 @@ button:hover {
     padding-bottom:56.25%;
     margin-top:0.5em;
 }
+
 .video-container iframe {
     position:absolute;
     top:0;
@@ -113,6 +128,7 @@ button:hover {
     border:none;
     border-radius:8px;
 }
+
 .delete-btn {
     margin-top:0.5em;
     background:#ff5555;
@@ -123,13 +139,16 @@ button:hover {
     cursor:pointer;
     transition: background 0.3s, transform 0.2s;
 }
+
 .delete-btn:hover {
     background:#e04343;
     transform: scale(1.05);
 }
+
 .post.own {
     border: 2px solid #ffbb33;
 }
+
 .tag-box {
     font-family: 'TungstenBold', Arial, sans-serif;
     display: inline-block;
@@ -140,6 +159,7 @@ button:hover {
     border-radius: 8px;
     font-size: 0.85em;
 }
+
 #searchInput {
     width:100%;
     padding:0.8em;
@@ -149,6 +169,7 @@ button:hover {
     background: rgba(255,255,255,0.1);
     color:#fff;
 }
+
 #searchInput:focus {
     outline:none;
     border:1px solid #ffbb33;
@@ -162,10 +183,10 @@ button:hover {
 <h2>Login / Registro</h2>
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="senha" placeholder="Senha">
+<input type="text" id="displayName" placeholder="Seu nome (para exibição)">
 <button id="loginBtn">Login / Criar conta</button>
 
 <h2>Poste sua autodance</h2>
-<input type="text" id="author" placeholder="Seu nome" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
@@ -177,12 +198,13 @@ button:hover {
 <div id="posts"></div>
 </main>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+<script>
+const JSONBIN_URL = "https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a";
+const JSONBIN_KEY = "$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC";
 
-const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a';
-const JSONBIN_KEY = '$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC';
+// Firebase setup
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
@@ -198,8 +220,8 @@ const auth = getAuth(app);
 
 const emailInput = document.getElementById("email");
 const senhaInput = document.getElementById("senha");
+const displayNameInput = document.getElementById("displayName");
 const loginBtn = document.getElementById("loginBtn");
-const authorInput = document.getElementById("author");
 const videoInput = document.getElementById("videoUrl");
 const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
@@ -207,6 +229,8 @@ const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
+
+// Palavras impróprias
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase",
 "fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt",
 "coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel",
@@ -216,104 +240,111 @@ const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase",
 loginBtn.addEventListener("click", async () => {
     const email = emailInput.value.trim();
     const senha = senhaInput.value.trim();
-    if(!email || !senha){ alert("Preencha email e senha!"); return; }
-    try { await signInWithEmailAndPassword(auth,email,senha); }
-    catch(e){
-        try { await createUserWithEmailAndPassword(auth,email,senha); }
-        catch(err){ alert(err.message); return; }
+    const name = displayNameInput.value.trim();
+    if(!email || !senha || !name){ alert("Preencha todos os campos!"); return; }
+    try {
+        await signInWithEmailAndPassword(auth,email,senha);
+    } catch(e){
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth,email,senha);
+            await updateProfile(userCred.user,{displayName:name});
+        } catch(err){ alert(err.message); return; }
     }
 });
 
 // Detecta login
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth,user=>{
     if(user){
         currentUser = user;
-        authorInput.disabled = false;
-        videoInput.disabled = false;
-        tagsInput.disabled = false;
-        postBtn.disabled = false;
-        loginBtn.disabled = true;
-        emailInput.disabled = true;
-        senhaInput.disabled = true;
+        videoInput.disabled=false;
+        tagsInput.disabled=false;
+        postBtn.disabled=false;
+        emailInput.disabled=true;
+        senhaInput.disabled=true;
+        displayNameInput.disabled=true;
+        loginBtn.disabled=true;
         loadPosts();
     } else {
-        currentUser = null;
-        authorInput.disabled = true;
-        videoInput.disabled = true;
-        tagsInput.disabled = true;
-        postBtn.disabled = true;
-        loginBtn.disabled = false;
-        emailInput.disabled = false;
-        senhaInput.disabled = false;
+        currentUser=null;
+        videoInput.disabled=true;
+        tagsInput.disabled=true;
+        postBtn.disabled=true;
+        emailInput.disabled=false;
+        senhaInput.disabled=false;
+        displayNameInput.disabled=false;
+        loginBtn.disabled=false;
     }
 });
 
-// Adiciona post
-postBtn.addEventListener("click", async () => {
-    const author = authorInput.value.trim() || currentUser.email;
+// Adicionar post
+postBtn.addEventListener("click", async ()=>{
+    if(!currentUser) return;
+    const author = currentUser.displayName || currentUser.email;
     const video = videoInput.value.trim();
-    let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
-
-    if(!video.includes("streamable.com")){ alert("Só Streamable!"); return; }
+    const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
+    
+    if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return; }
     if(tags.some(t => blockedWords.some(w => t.toLowerCase().includes(w)))) {
         alert("Tags impróprias não são permitidas!");
         return;
     }
 
-    try{
-        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    try {
+        // Puxa posts atuais
+        const res = await fetch(JSONBIN_URL,{headers:{'X-Master-Key':JSONBIN_KEY}});
         const data = await res.json();
         const posts = data.record || [];
-        posts.push({ author, video, tags, ownerId: currentUser.uid });
-        await fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
-            body: JSON.stringify(posts)
+
+        posts.push({author,video,tags,uid:currentUser.uid});
+        await fetch(JSONBIN_URL,{
+            method:"PUT",
+            headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+            body:JSON.stringify(posts)
         });
-        videoInput.value = ""; tagsInput.value = "";
+
+        videoInput.value=""; tagsInput.value="";
         loadPosts();
-    }catch(e){ console.error(e); alert("Erro ao postar."); }
+    } catch(e){ console.error(e); alert("Erro ao postar!"); }
 });
 
-// Carrega posts
+// Carregar posts
 async function loadPosts(){
-    try{
-        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    postsContainer.innerHTML="";
+    try {
+        const res = await fetch(JSONBIN_URL,{headers:{'X-Master-Key':JSONBIN_KEY}});
         const data = await res.json();
         const posts = data.record || [];
-        postsContainer.innerHTML = "";
-        posts.reverse().forEach((post,index)=>{
+        posts.slice().reverse().forEach((post,index)=>{
             const div = document.createElement("div");
-            div.className = "post";
-            if(post.ownerId===currentUser.uid) div.classList.add("own");
+            div.className="post";
+            if(post.uid===currentUser?.uid) div.classList.add("own");
 
-            div.innerHTML = `
+            div.innerHTML=`
                 <div class="author">${post.author}:</div>
                 <div class="video-container">
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
             `;
             if(post.tags && post.tags.length){
-                const tagsContainer = document.createElement("div");
-                tagsContainer.style.marginTop="0.5em";
+                const tagContainer=document.createElement("div");
+                tagContainer.style.marginTop="0.5em";
                 post.tags.forEach(tag=>{
-                    const tagBox = document.createElement("span");
+                    const tagBox=document.createElement("span");
                     tagBox.className="tag-box";
                     tagBox.textContent=tag;
-                    tagsContainer.appendChild(tagBox);
+                    tagContainer.appendChild(tagBox);
                 });
-                div.appendChild(tagsContainer);
+                div.appendChild(tagContainer);
             }
 
-            // botão excluir apenas do dono
-            if(post.ownerId===currentUser.uid){
-                const delBtn = document.createElement("button");
+            if(post.uid===currentUser?.uid){
+                const delBtn=document.createElement("button");
                 delBtn.textContent="Excluir";
                 delBtn.className="delete-btn";
                 delBtn.onclick = async ()=>{
                     posts.splice(posts.length-1-index,1);
                     await fetch(JSONBIN_URL,{
-                        method:'PUT',
+                        method:"PUT",
                         headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
                         body:JSON.stringify(posts)
                     });
@@ -321,19 +352,18 @@ async function loadPosts(){
                 };
                 div.appendChild(delBtn);
             }
-
             postsContainer.appendChild(div);
         });
-    }catch(e){ console.error(e); }
+    } catch(e){ console.error(e); }
 }
 
-// Pesquisa por tags
-searchInput.addEventListener("input", ()=>{
-    const filter = searchInput.value.trim().toLowerCase();
-    const posts = postsContainer.querySelectorAll(".post");
+// Filtrar por tag
+searchInput.addEventListener("input",()=>{
+    const filter=searchInput.value.trim().toLowerCase();
+    const posts=document.querySelectorAll(".post");
     posts.forEach(p=>{
-        const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
-        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
+        const tags=Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+        p.style.display=tags.some(t=>t.includes(filter)) ? "" : "none";
     });
 });
 </script>
