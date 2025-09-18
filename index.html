@@ -14,7 +14,8 @@ button { background:#ff4d4d; color:#fff; cursor:pointer; }
 button:hover { background:#e04343; }
 .post { background:#333; padding:1em; border-radius:8px; margin-bottom:1em; }
 .author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
-video { max-width:100%; border-radius:5px; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
 </style>
 </head>
 <body>
@@ -22,7 +23,7 @@ video { max-width:100%; border-radius:5px; }
 <main>
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome">
-<input type="url" id="videoUrl" placeholder="Cole o link do vídeo (MP4)">
+<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)">
 <button onclick="addPost()">Postar</button>
 
 <h2>Autodances enviadas</h2>
@@ -48,7 +49,9 @@ async function loadPosts() {
             const div = document.createElement('div');
             div.classList.add('post');
             div.innerHTML = `<div class="author">${post.author}:</div>
-                             <video controls src="${post.video}"></video>`;
+                             <div class="video-container">
+                               <iframe src="${post.video}" allowfullscreen></iframe>
+                             </div>`;
             container.appendChild(div);
         });
     } catch (e) {
@@ -60,7 +63,7 @@ async function loadPosts() {
 async function addPost() {
     const author = document.getElementById('author').value.trim() || 'Anônimo';
     const videoUrl = document.getElementById('videoUrl').value.trim();
-    if (!videoUrl) { alert('Cole o link do vídeo!'); return; }
+    if (!videoUrl) { alert('Cole o embed do Streamable!'); return; }
 
     try {
         const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
@@ -86,7 +89,7 @@ async function addPost() {
     }
 }
 
-// Inicializa
+// Inicializa feed
 loadPosts();
 </script>
 </body>
