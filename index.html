@@ -49,7 +49,7 @@ input, button {
     padding:0.8em;
     margin-bottom:0.5em;
 }
-input[type="text"], input[type="url"] {
+input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
     width:100%;
     background: rgba(255,255,255,0.1);
     color:#fff;
@@ -183,7 +183,6 @@ button:hover {
 <div id="posts"></div>
 </main>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -215,13 +214,12 @@ const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
 
-// Lista de palavras impróprias
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase",
 "fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt",
 "coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel",
 "nigger","nigga","slut","whore","fag","retard"];
 
-// Função de login ou criar conta
+// Login / criar conta
 loginBtn.addEventListener("click", async () => {
     const email = emailInput.value.trim();
     const senha = senhaInput.value.trim();
@@ -229,13 +227,12 @@ loginBtn.addEventListener("click", async () => {
     try {
         await signInWithEmailAndPassword(auth, email, senha);
     } catch(e){
-        // Se não existe, cria conta
         try { await createUserWithEmailAndPassword(auth,email,senha); }
         catch(err){ alert(err.message); return; }
     }
 });
 
-// Detecta mudanças de login
+// Detecta login
 onAuthStateChanged(auth, user => {
     if(user){
         currentUser = user;
@@ -246,6 +243,7 @@ onAuthStateChanged(auth, user => {
         loginBtn.disabled = true;
         emailInput.disabled = true;
         senhaInput.disabled = true;
+        authorInput.value = currentUser.email;
         loadPosts();
     } else {
         currentUser = null;
@@ -256,10 +254,11 @@ onAuthStateChanged(auth, user => {
         loginBtn.disabled = false;
         emailInput.disabled = false;
         senhaInput.disabled = false;
+        authorInput.value = "";
     }
 });
 
-// Adiciona post
+// Adicionar post
 postBtn.addEventListener("click", async () => {
     const author = authorInput.value.trim() || currentUser.email;
     const video = videoInput.value.trim();
@@ -276,7 +275,7 @@ postBtn.addEventListener("click", async () => {
     videoInput.value = ""; tagsInput.value = "";
 });
 
-// Carrega posts
+// Carregar posts
 function loadPosts(){
     onValue(ref(db,"posts"), snapshot=>{
         postsContainer.innerHTML = "";
@@ -319,7 +318,7 @@ function loadPosts(){
     });
 }
 
-// Filtrar pesquisa
+// Filtro pesquisa
 searchInput.addEventListener("input", ()=>{
     const filter = searchInput.value.trim().toLowerCase();
     const posts = postsContainer.querySelectorAll(".post");
