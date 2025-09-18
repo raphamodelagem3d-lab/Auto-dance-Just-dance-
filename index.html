@@ -10,7 +10,6 @@
     font-family: 'TungstenBold';
     src: url('Tungsten-Bold.ttf') format('truetype');
 }
-
 body {
     font-family: Arial, sans-serif;
     background: url('IMG_2223.jpeg') no-repeat center center fixed;
@@ -19,7 +18,6 @@ body {
     margin:0;
     padding:0;
 }
-
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
     font-weight: normal;
@@ -32,7 +30,6 @@ header {
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     border-radius: 0 0 12px 12px;
 }
-
 main {
     max-width: 900px;
     margin: 2em auto;
@@ -41,12 +38,10 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-
 h2 {
     margin-top:1.5em;
     color:#ffbb33;
 }
-
 input, button {
     font-size:1em;
     border-radius:12px;
@@ -54,7 +49,6 @@ input, button {
     padding:0.8em;
     margin-bottom:0.5em;
 }
-
 input[type="text"], input[type="url"] {
     width:100%;
     background: rgba(255,255,255,0.1);
@@ -63,17 +57,14 @@ input[type="text"], input[type="url"] {
     backdrop-filter: blur(6px);
     transition: border 0.3s, background 0.3s;
 }
-
 input::placeholder {
     color:#ccc;
 }
-
 input:focus {
     border:1px solid #ffbb33;
     background: rgba(255,255,255,0.2);
     outline:none;
 }
-
 button {
     background: linear-gradient(135deg, #ff4d4d, #ffbb33);
     color: #fff;
@@ -82,13 +73,11 @@ button {
     transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     padding:0.8em 1.5em;
 }
-
 button:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(255,187,51,0.6);
     background: linear-gradient(135deg, #ffbb33, #ff4d4d);
 }
-
 .post {
     background: rgba(30,30,30,0.4);
     backdrop-filter: blur(8px);
@@ -99,18 +88,15 @@ button:hover {
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
 }
-
 .post:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.6);
 }
-
 .author {
     font-weight:bold;
     color:#ffbb33;
     margin-bottom:0.5em;
 }
-
 .video-container {
     position:relative;
     width:100%;
@@ -118,7 +104,6 @@ button:hover {
     padding-bottom:56.25%;
     margin-top:0.5em;
 }
-
 .video-container iframe {
     position:absolute;
     top:0;
@@ -128,7 +113,6 @@ button:hover {
     border:none;
     border-radius:8px;
 }
-
 .delete-btn {
     margin-top:0.5em;
     background:#ff5555;
@@ -139,16 +123,13 @@ button:hover {
     cursor:pointer;
     transition: background 0.3s, transform 0.2s;
 }
-
 .delete-btn:hover {
     background:#e04343;
     transform: scale(1.05);
 }
-
 .post.own {
     border: 2px solid #ffbb33;
 }
-
 .tag-box {
     font-family: 'TungstenBold', Arial, sans-serif;
     display: inline-block;
@@ -161,151 +142,158 @@ button:hover {
     cursor: pointer;
     transition: transform 0.2s, background 0.2s;
 }
-
 .tag-box:hover {
     transform: scale(1.05);
     background: rgba(255,187,51,0.4);
 }
-
-#filter-btn {
-    background: #ffbb33;
-    color: #000;
-    margin-bottom: 1em;
+#searchInput {
+    width:100%;
+    padding:0.8em;
+    margin-bottom:1em;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color:#fff;
 }
-
-#filter-btn:hover {
-    background: #ffdd66;
-}
-
-#tag-filters button {
-    margin: 0 4px 4px 0;
+#searchInput:focus {
+    outline:none;
+    border:1px solid #ffbb33;
 }
 </style>
 </head>
 <body>
-
 <header>Autodance Share Online</header>
 <main>
 
-<h2>Login / Registrar</h2>
+<h2>Login / Registro</h2>
 <input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Senha">
-<button onclick="loginOrRegister()">Entrar / Registrar</button>
+<input type="password" id="senha" placeholder="Senha">
+<button id="loginBtn">Login / Criar conta</button>
 
 <h2>Poste sua autodance</h2>
-<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)">
-<input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)">
-<button onclick="addPost()">Postar</button>
+<input type="text" id="author" placeholder="Seu nome" disabled>
+<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)" disabled>
+<input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
+<button id="postBtn" disabled>Postar</button>
 
 <h2>Pesquisar por tag</h2>
-<input type="text" id="searchTag" placeholder="Digite a tag para pesquisar">
-<button onclick="searchTag()">Pesquisar</button>
-
-<h2>Filtros Just Dance</h2>
-<div id="tag-filters"></div>
+<input type="text" id="searchInput" placeholder="Pesquisar tag...">
 
 <h2>Autodances enviadas</h2>
 <div id="posts"></div>
 </main>
 
+<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
   authDomain: "auto-dance.firebaseapp.com",
+  databaseURL: "https://auto-dance-default-rtdb.firebaseio.com",
   projectId: "auto-dance",
   storageBucket: "auto-dance.firebasestorage.app",
   messagingSenderId: "960760470726",
   appId: "1:960760470726:web:f5af55d01df6a2be0d4bc7"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-let loggedUserUid = null;
-let loggedUserEmail = null;
+const emailInput = document.getElementById("email");
+const senhaInput = document.getElementById("senha");
+const loginBtn = document.getElementById("loginBtn");
+const authorInput = document.getElementById("author");
+const videoInput = document.getElementById("videoUrl");
+const tagsInput = document.getElementById("tags");
+const postBtn = document.getElementById("postBtn");
+const postsContainer = document.getElementById("posts");
+const searchInput = document.getElementById("searchInput");
 
-async function loginOrRegister(){
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    if(!email || !password){ alert("Preencha email e senha"); return; }
+let currentUser = null;
 
+// Lista de palavras impróprias
+const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase",
+"fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt",
+"coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel",
+"nigger","nigga","slut","whore","fag","retard"];
+
+// Função de login ou criar conta
+loginBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const senha = senhaInput.value.trim();
+    if(!email || !senha){ alert("Preencha email e senha!"); return; }
     try {
-        const userCredential = await signInWithEmailAndPassword(auth,email,password);
-        loggedUserUid = userCredential.user.uid;
-        loggedUserEmail = userCredential.user.email;
-        alert("Login bem-sucedido!");
-    } catch(e) {
-        // Tenta criar conta se login falhar
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth,email,password);
-            loggedUserUid = userCredential.user.uid;
-            loggedUserEmail = userCredential.user.email;
-            alert("Conta criada e logado!");
-        } catch(err) {
-            alert("Erro: "+err.message);
-        }
+        await signInWithEmailAndPassword(auth, email, senha);
+    } catch(e){
+        // Se não existe, cria conta
+        try { await createUserWithEmailAndPassword(auth,email,senha); }
+        catch(err){ alert(err.message); return; }
     }
-}
-
-// JSONBin config
-const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a';
-const JSONBIN_KEY = '$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC';
-
-// Bloqueio de palavras impróprias multilínguas
-const blockedWords = ["sexo","porn","fuck","shit","bitch","merda","puta","cazzo","foda","xxx"];
-
-let activeFilter = null;
-
-// Filtros Just Dance
-const jdTags = [
-"Just Dance 1","Just Dance 2","Just Dance 3","Just Dance 4","Just Dance 2014",
-"Just Dance 2015","Just Dance 2016","Just Dance 2017","Just Dance 2018",
-"Just Dance 2019","Just Dance 2020","Just Dance 2021","Just Dance 2022",
-"Just Dance 2023","Just Dance 2024","Just Dance 2025"
-];
-const filterDiv = document.getElementById("tag-filters");
-jdTags.forEach(tag=>{
-    const btn = document.createElement("button");
-    btn.textContent = tag;
-    btn.onclick = ()=>{ activeFilter = tag; loadPosts(); };
-    filterDiv.appendChild(btn);
 });
 
-function clearFilter(){ activeFilter=null; loadPosts(); }
+// Detecta mudanças de login
+onAuthStateChanged(auth, user => {
+    if(user){
+        currentUser = user;
+        authorInput.disabled = false;
+        videoInput.disabled = false;
+        tagsInput.disabled = false;
+        postBtn.disabled = false;
+        loginBtn.disabled = true;
+        emailInput.disabled = true;
+        senhaInput.disabled = true;
+        loadPosts();
+    } else {
+        currentUser = null;
+        authorInput.disabled = true;
+        videoInput.disabled = true;
+        tagsInput.disabled = true;
+        postBtn.disabled = true;
+        loginBtn.disabled = false;
+        emailInput.disabled = false;
+        senhaInput.disabled = false;
+    }
+});
 
-// Pesquisa livre
-function searchTag(){
-    const input = document.getElementById("searchTag").value.trim();
-    if(!input){ activeFilter=null; loadPosts(); return; }
+// Adiciona post
+postBtn.addEventListener("click", async () => {
+    const author = authorInput.value.trim() || currentUser.email;
+    const video = videoInput.value.trim();
+    let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
-    const invalid = blockedWords.some(w=>input.toLowerCase().includes(w));
-    if(invalid){ alert("Não é permitido pesquisar tags impróprias!"); return; }
+    if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return; }
+    if(tags.some(t => blockedWords.some(w => t.toLowerCase().includes(w)))) {
+        alert("Tags impróprias não são permitidas!");
+        return;
+    }
 
-    activeFilter = input;
-    loadPosts();
-}
+    const postRef = push(ref(db, "posts"));
+    await set(postRef, { author, video, tags, uid: currentUser.uid });
+    videoInput.value = ""; tagsInput.value = "";
+});
 
 // Carrega posts
-async function loadPosts(){
-    const container = document.getElementById("posts");
-    container.innerHTML = '';
-    try{
-        const res = await fetch(JSONBIN_URL,{ headers:{ 'X-Master-Key': JSONBIN_KEY } });
-        const data = await res.json();
-        const posts = data.record || [];
-        posts.slice().reverse().forEach((post,index)=>{
-            if(activeFilter && (!post.tags || !post.tags.includes(activeFilter))) return;
+function loadPosts(){
+    onValue(ref(db,"posts"), snapshot=>{
+        postsContainer.innerHTML = "";
+        const data = snapshot.val();
+        if(!data) return;
+        const arr = Object.entries(data).reverse(); // Mais recentes primeiro
+        arr.forEach(([key, post])=>{
             const div = document.createElement("div");
-            div.className="post";
-            if(post.ownerId===loggedUserUid) div.classList.add("own");
-            div.innerHTML=`
+            div.className = "post";
+            if(post.uid === currentUser.uid) div.classList.add("own");
+
+            div.innerHTML = `
                 <div class="author">${post.author}:</div>
                 <div class="video-container">
                     <iframe src="${post.video}" allowfullscreen></iframe>
-                </div>`;
+                </div>
+            `;
             if(post.tags && post.tags.length){
                 const tagsContainer = document.createElement("div");
                 tagsContainer.style.marginTop="0.5em";
@@ -313,69 +301,33 @@ async function loadPosts(){
                     const tagBox = document.createElement("span");
                     tagBox.className="tag-box";
                     tagBox.textContent=tag;
-                    tagBox.onclick = ()=>{ activeFilter=tag; loadPosts(); };
                     tagsContainer.appendChild(tagBox);
                 });
                 div.appendChild(tagsContainer);
             }
-            if(post.ownerId===loggedUserUid){
-                const btn = document.createElement("button");
-                btn.textContent="Excluir";
-                btn.className="delete-btn";
-                btn.onclick=()=>deletePost(posts.length-1-index);
-                div.appendChild(btn);
+
+            if(post.uid===currentUser.uid){
+                const delBtn = document.createElement("button");
+                delBtn.textContent="Excluir";
+                delBtn.className="delete-btn";
+                delBtn.onclick = () => remove(ref(db,"posts/"+key));
+                div.appendChild(delBtn);
             }
-            container.appendChild(div);
+
+            postsContainer.appendChild(div);
         });
-    } catch(e){ console.error("Erro ao carregar posts:",e);}
+    });
 }
 
-// Adiciona post
-async function addPost(){
-    if(!loggedUserUid){ alert("Faça login antes de postar!"); return; }
-    const videoUrl = document.getElementById("videoUrl").value.trim();
-    const tagsInput = document.getElementById("tags").value.trim();
-    const tags = tagsInput ? tagsInput.split(',').map(t=>t.trim()) : [];
-    if(!videoUrl.includes("streamable.com")){ alert("Só é permitido link do Streamable!"); return; }
-
-    const invalid = tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)));
-    if(invalid){ alert("Tags impróprias não são permitidas!"); return; }
-
-    try{
-        const res = await fetch(JSONBIN_URL,{ headers:{ 'X-Master-Key': JSONBIN_KEY }});
-        const data = await res.json();
-        const posts = data.record || [];
-        posts.push({ author: loggedUserEmail, video: videoUrl, ownerId: loggedUserUid, tags });
-        await fetch(JSONBIN_URL,{
-            method:"PUT",
-            headers:{ 'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY },
-            body: JSON.stringify(posts)
-        });
-        document.getElementById("videoUrl").value='';
-        document.getElementById("tags").value='';
-        loadPosts();
-    } catch(e){ console.error("Erro ao postar:",e);}
-}
-
-// Excluir post
-async function deletePost(i){
-    if(!confirm("Tem certeza que quer excluir este post?")) return;
-    try{
-        const res = await fetch(JSONBIN_URL,{ headers:{ 'X-Master-Key': JSONBIN_KEY }});
-        const data = await res.json();
-        const posts = data.record || [];
-        posts.splice(i,1);
-        await fetch(JSONBIN_URL,{
-            method:"PUT",
-            headers:{ 'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY },
-            body: JSON.stringify(posts)
-        });
-        loadPosts();
-    } catch(e){ console.error("Erro ao excluir:",e);}
-}
-
-// Inicializa
-loadPosts();
+// Filtrar pesquisa
+searchInput.addEventListener("input", ()=>{
+    const filter = searchInput.value.trim().toLowerCase();
+    const posts = postsContainer.querySelectorAll(".post");
+    posts.forEach(p=>{
+        const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
+    });
+});
 
 </script>
 </body>
