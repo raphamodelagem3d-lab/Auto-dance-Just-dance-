@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -19,6 +18,36 @@ body {
     margin:0;
     padding:0;
 }
+/* --- Tela de avatar --- */
+#avatar-screen {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.85);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+#avatar-screen h1 { color:#ff66ff; margin-bottom:20px; font-family:'TungstenBold'; }
+.avatar-carousel { display:flex; align-items:center; gap:10px; }
+.arrow-btn {
+  background:none; border:none; color:#ff66ff; font-size:2em; cursor:pointer;
+}
+.avatar-grid { display:flex; gap:10px; flex-wrap: wrap; justify-content:center; max-width: 600px;}
+.avatar {
+  width:80px; height:80px; border-radius:12px; overflow:hidden; cursor:pointer;
+  border:2px solid transparent; transition: transform 0.3s, border 0.3s;
+}
+.avatar img { width:100%; height:100%; object-fit:cover; }
+.avatar.selected { border:2px solid #ff66ff; transform:scale(1.1); }
+
+/* --- Site normal --- */
+#main-site { display:none; padding:20px; }
+.avatar-post { width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:6px; }
+
+/* --- Seu CSS original --- */
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
     font-weight: normal;
@@ -39,10 +68,7 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-h2 {
-    margin-top:1.5em;
-    color:#ffbb33;
-}
+h2 { margin-top:1.5em; color:#ffbb33; }
 input, button {
     font-size:1em;
     border-radius:12px;
@@ -58,14 +84,8 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
     backdrop-filter: blur(6px);
     transition: border 0.3s, background 0.3s;
 }
-input::placeholder {
-    color:#ccc;
-}
-input:focus {
-    border:1px solid #ffbb33;
-    background: rgba(255,255,255,0.2);
-    outline:none;
-}
+input::placeholder { color:#ccc; }
+input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
 button {
     background: linear-gradient(135deg, #ff4d4d, #ffbb33);
     color: #fff;
@@ -74,11 +94,7 @@ button {
     transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     padding:0.8em 1.5em;
 }
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255,187,51,0.6);
-    background: linear-gradient(135deg, #ffbb33, #ff4d4d);
-}
+button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.6); background: linear-gradient(135deg, #ffbb33, #ff4d4d); }
 .post {
     background: rgba(30,30,30,0.4);
     backdrop-filter: blur(8px);
@@ -89,48 +105,13 @@ button:hover {
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
 }
-.post:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-}
-.author {
-    font-weight:bold;
-    color:#ffbb33;
-    margin-bottom:0.5em;
-}
-.video-container {
-    position:relative;
-    width:100%;
-    height:0;
-    padding-bottom:56.25%;
-    margin-top:0.5em;
-}
-.video-container iframe {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    border:none;
-    border-radius:8px;
-}
-.delete-btn {
-    margin-top:0.5em;
-    background:#ff5555;
-    color:#fff;
-    border:none;
-    padding:0.5em 1em;
-    border-radius:8px;
-    cursor:pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-.delete-btn:hover {
-    background:#e04343;
-    transform: scale(1.05);
-}
-.post.own {
-    border: 2px solid #ffbb33;
-}
+.post:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.6); }
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px; }
+.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s; }
+.delete-btn:hover { background:#e04343; transform: scale(1.05); }
+.post.own { border: 2px solid #ffbb33; }
 .tag-box {
     font-family: 'TungstenBold', Arial, sans-serif;
     display: inline-block;
@@ -141,22 +122,22 @@ button:hover {
     border-radius: 8px;
     font-size: 0.85em;
 }
-#searchInput {
-    width:100%;
-    padding:0.8em;
-    margin-bottom:1em;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-#searchInput:focus {
-    outline:none;
-    border:1px solid #ffbb33;
-}
+#searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
+#searchInput:focus { outline:none; border:1px solid #ffbb33; }
 </style>
 </head>
 <body>
+
+<!-- Tela de avatar -->
+<div id="avatar-screen">
+  <h1>Escolha seu avatar</h1>
+  <div class="avatar-carousel">
+    <button class="arrow-btn" id="prevBtn">&#8592;</button>
+    <div class="avatar-grid" id="avatarGrid"></div>
+    <button class="arrow-btn" id="nextBtn">&#8594;</button>
+  </div>
+</div>
+
 <header>Autodance Share Online</header>
 <main>
 
@@ -178,7 +159,6 @@ button:hover {
 <div id="posts"></div>
 </main>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -209,107 +189,156 @@ const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
+let userAvatar = null;
 
-// Palavras impróprias
-const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
+// --- Avatares ---
+const avatarFolder = "/Just dance avatars/";
+const avatarFiles = [
+  "All I Want for Christmas Is You.png",
+  "American Girl.png",
+  "Applause (Stage).png",
+  "Applause.png",
+  "Aquarius Let The Sunshine In (P1).png",
+  "Aquarius Let The Sunshine In (P2).png"
+  // continue adicionando todos os arquivos aqui
+];
+let currentPage = 0;
+const avatarsPerPage = 6;
 
-// Login / criar conta
-loginBtn.addEventListener("click", async ()=>{
-    const email = emailInput.value.trim();
-    const senha = senhaInput.value.trim();
-    if(!email||!senha){alert("Preencha email e senha!"); return;}
-    try{ await signInWithEmailAndPassword(auth,email,senha); }
-    catch(e){ 
-        try{ await createUserWithEmailAndPassword(auth,email,senha); }
-        catch(err){ alert(err.message); return; }
-    }
+const avatarGrid = document.getElementById("avatarGrid");
+function renderAvatars(){
+  avatarGrid.innerHTML="";
+  const start = currentPage*avatarsPerPage;
+  const end = Math.min(start + avatarsPerPage, avatarFiles.length);
+  for(let i=start;i<end;i++){
+    const div=document.createElement("div");
+    div.className="avatar";
+    div.innerHTML=`<img src="${avatarFolder + encodeURIComponent(avatarFiles[i])}" alt="avatar">`;
+    div.onclick=()=>selectAvatar(div, avatarFolder + avatarFiles[i]);
+    avatarGrid.appendChild(div);
+  }
+}
+document.getElementById("prevBtn").onclick=()=>{ if(currentPage>0) currentPage--; renderAvatars(); };
+document.getElementById("nextBtn").onclick=()=>{ if((currentPage+1)*avatarsPerPage<avatarFiles.length) currentPage++; renderAvatars(); };
+
+function selectAvatar(element, path){
+  document.querySelectorAll(".avatar").forEach(a=>a.classList.remove("selected"));
+  element.classList.add("selected");
+  userAvatar = path;
+  localStorage.setItem("selectedAvatar", path);
+  document.getElementById("avatar-screen").style.display="none";
+  document.querySelector("main").style.display="block";
+}
+
+// Avatar salvo
+document.addEventListener("DOMContentLoaded", ()=>{
+  const savedAvatar = localStorage.getItem("selectedAvatar");
+  if(savedAvatar){
+    userAvatar = savedAvatar;
+    document.getElementById("avatar-screen").style.display="none";
+    document.querySelector("main").style.display="block";
+  } else {
+    renderAvatars();
+  }
 });
 
-// Detecta login
+// --- Login / registro ---
+loginBtn.addEventListener("click", async ()=>{
+  const email = emailInput.value.trim();
+  const senha = senhaInput.value.trim();
+  if(!email||!senha){alert("Preencha email e senha!"); return;}
+  try{ await signInWithEmailAndPassword(auth,email,senha); }
+  catch(e){ 
+    try{ await createUserWithEmailAndPassword(auth,email,senha); }
+    catch(err){ alert(err.message); return; }
+  }
+});
+
 onAuthStateChanged(auth,user=>{
-    if(user){
-        currentUser=user;
-        authorInput.value = user.email.split("@")[0];
-        authorInput.disabled=false;
-        videoInput.disabled=false;
-        tagsInput.disabled=false;
-        postBtn.disabled=false;
-        loginBtn.disabled=true;
-        emailInput.disabled=true;
-        senhaInput.disabled=true;
-        loadPosts();
-    } else {
-        currentUser=null;
-        authorInput.disabled=true;
-        videoInput.disabled=true;
-        tagsInput.disabled=true;
-        postBtn.disabled=true;
-        loginBtn.disabled=false;
-        emailInput.disabled=false;
-        senhaInput.disabled=false;
-        postsContainer.innerHTML="";
-    }
+  if(user){
+    currentUser=user;
+    authorInput.value = user.email.split("@")[0];
+    authorInput.disabled=false;
+    videoInput.disabled=false;
+    tagsInput.disabled=false;
+    postBtn.disabled=false;
+    loginBtn.disabled=true;
+    emailInput.disabled=true;
+    senhaInput.disabled=true;
+    loadPosts();
+  } else {
+    currentUser=null;
+    authorInput.disabled=true;
+    videoInput.disabled=true;
+    tagsInput.disabled=true;
+    postBtn.disabled=true;
+    loginBtn.disabled=false;
+    emailInput.disabled=false;
+    senhaInput.disabled=false;
+    postsContainer.innerHTML="";
+  }
 });
 
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
-    const author = authorInput.value;
-    const video = videoInput.value.trim();
-    let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
-    if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
-    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
-    const postRef = push(ref(db,"posts"));
-    await set(postRef,{author,video,tags,uid:currentUser.uid});
-    videoInput.value=""; tagsInput.value="";
+  const author = authorInput.value;
+  const video = videoInput.value.trim();
+  let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
+  const postRef = push(ref(db,"posts"));
+  await set(postRef,{author,video,tags,uid:currentUser.uid, avatar:userAvatar});
+  videoInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
 function loadPosts(){
-    onValue(ref(db,"posts"),snapshot=>{
-        postsContainer.innerHTML="";
-        const data = snapshot.val();
-        if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
-            const div = document.createElement("div");
-            div.className="post";
-            if(post.uid===currentUser.uid) div.classList.add("own");
-            div.innerHTML=`
-                <div class="author">${post.author}:</div>
-                <div class="video-container">
-                    <iframe src="${post.video}" allowfullscreen></iframe>
-                </div>
-            `;
-            if(post.tags&&post.tags.length){
-                const tagsContainer=document.createElement("div");
-                tagsContainer.style.marginTop="0.5em";
-                post.tags.forEach(tag=>{
-                    const tagBox=document.createElement("span");
-                    tagBox.className="tag-box";
-                    tagBox.textContent=tag;
-                    tagsContainer.appendChild(tagBox);
-                });
-                div.appendChild(tagsContainer);
-            }
-            if(post.uid===currentUser.uid){
-                const delBtn=document.createElement("button");
-                delBtn.textContent="Excluir";
-                delBtn.className="delete-btn";
-                delBtn.onclick=()=>remove(ref(db,"posts/"+key));
-                div.appendChild(delBtn);
-            }
-            postsContainer.appendChild(div);
+  onValue(ref(db,"posts"),snapshot=>{
+    postsContainer.innerHTML="";
+    const data = snapshot.val();
+    if(!data) return;
+    Object.entries(data).reverse().forEach(([key,post])=>{
+      const div = document.createElement("div");
+      div.className="post";
+      if(post.uid===currentUser.uid) div.classList.add("own");
+      div.innerHTML=`
+        <div class="author">
+          ${post.avatar ? `<img src="${post.avatar}" class="avatar-post">` : ""}
+          ${post.author}:
+        </div>
+        <div class="video-container">
+          <iframe src="${post.video}" allowfullscreen></iframe>
+        </div>
+      `;
+      if(post.tags&&post.tags.length){
+        const tagsContainer=document.createElement("div");
+        tagsContainer.style.marginTop="0.5em";
+        post.tags.forEach(tag=>{
+          const tagBox=document.createElement("span");
+          tagBox.className="tag-box";
+          tagBox.textContent=tag;
+          tagsContainer.appendChild(tagBox);
         });
+        div.appendChild(tagsContainer);
+      }
+      if(post.uid===currentUser.uid){
+        const delBtn=document.createElement("button");
+        delBtn.textContent="Excluir";
+        delBtn.className="delete-btn";
+        delBtn.onclick=()=>remove(ref(db,"posts/"+key));
+        div.appendChild(delBtn);
+      }
+      postsContainer.appendChild(div);
     });
+  });
 }
 
 // Filtrar pesquisa
 searchInput.addEventListener("input", ()=>{
-    const filter = searchInput.value.trim().toLowerCase();
-    const posts = postsContainer.querySelectorAll(".post");
-    posts.forEach(p=>{
-        const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
-        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
-    });
+  const filter = searchInput.value.trim().toLowerCase();
+  const posts = postsContainer.querySelectorAll(".post");
+  posts.forEach(p=>{
+    const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+    p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
+  });
 });
 </script>
 </body>
