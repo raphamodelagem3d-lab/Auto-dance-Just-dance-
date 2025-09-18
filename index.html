@@ -2,189 +2,141 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Autodance</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodance Share Online</title>
 <style>
+/* Fonte Tungsten Bold */
 @font-face {
-    font-family: 'Tungsten';
-    src: url('fonts/Tungsten-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
+    font-family: 'TungstenBold';
+    src: url('Tungsten Bold.ttf') format('truetype');
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #0f0f0f;
-    color: #fff;
-}
-
-header {
-    background: linear-gradient(90deg, #ff0080, #7928ca);
-    padding: 20px;
-    text-align: center;
-}
-
-header h1 {
-    font-family: 'Tungsten', Arial Black, sans-serif;
-    font-size: 52px;
-    margin: 0;
-    color: #fff;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-
-/* Formulário */
-.post-form {
-    max-width: 700px;
-    margin: 20px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.post-form input {
-    padding: 12px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-}
-
-.post-form button {
-    padding: 12px 20px;
-    border: none;
-    background: #ff0080;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.post-form button:hover {
-    background: #ff4da6;
-}
-
-/* Feed */
-.feed {
-    max-width: 700px;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.post {
-    background: #1a1a1a;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-}
-
-.post h3 {
-    margin: 0 0 10px;
-    font-size: 20px;
-    color: #ff80d5;
-}
-
-.video-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.video-wrapper iframe {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border: none;
-}
-
-/* Botão de excluir */
-.delete-btn {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: #ff4040;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.delete-btn:hover {
-    background: #ff7373;
-}
+body { font-family: Arial, sans-serif; background:#1a1a1a; color:#f0f0f0; margin:0; padding:0; }
+header { font-family: 'TungstenBold', Arial, sans-serif; background:#ff4d4d; padding:1em; text-align:center; font-size:2em; text-transform:uppercase; letter-spacing:2px; }
+main { max-width:800px; margin:2em auto; padding:1em; }
+input, button { padding:0.7em; margin-bottom:1em; border-radius:5px; border:none; }
+input[type="text"], input[type="url"] { width:100%; margin-bottom:0.5em; }
+button { background:#ff4d4d; color:#fff; cursor:pointer; }
+button:hover { background:#e04343; }
+.post { background:#333; padding:1em; border-radius:8px; margin-bottom:1em; }
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.delete-btn { margin-top:0.5em; background:#ff5555; }
+.delete-btn:hover { background:#e04343; }
 </style>
 </head>
 <body>
-    <header>
-        <h1>Autodance</h1>
-    </header>
+<header>Autodance Share Online</header>
+<main>
+<h2>Poste sua autodance</h2>
+<input type="text" id="author" placeholder="Seu nome">
+<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (iframe src)">
+<button onclick="addPost()">Postar</button>
 
-    <main>
-        <section class="post-form">
-            <input id="authorName" placeholder="Digite seu nome">
-            <input id="videoUrl" placeholder="Cole o link do Streamable">
-            <button id="postVideo">Postar</button>
-        </section>
-
-        <section id="feed" class="feed"></section>
-    </main>
+<h2>Autodances enviadas</h2>
+<div id="posts"></div>
+</main>
 
 <script>
-const feedDiv = document.getElementById('feed');
-const videoInput = document.getElementById('videoUrl');
-const nameInput = document.getElementById('authorName');
-const postBtn = document.getElementById('postVideo');
+// Configuração do JSONBin
+const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a';
+const JSONBIN_KEY = '$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC';
 
-const postedNames = new Set(); // guarda nomes únicos
+// Carrega posts do bin
+async function loadPosts() {
+    const container = document.getElementById('posts');
+    container.innerHTML = '';
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
+        const currentAuthor = document.getElementById('author').value.trim() || 'Anônimo';
 
-postBtn.addEventListener('click', () => {
-    const url = videoInput.value.trim();
-    const name = nameInput.value.trim();
+        posts.slice().reverse().forEach((post, index) => {
+            const div = document.createElement('div');
+            div.classList.add('post');
+            div.innerHTML = `
+                <div class="author">${post.author}:</div>
+                <div class="video-container">
+                    <iframe src="${post.video}" allowfullscreen></iframe>
+                </div>
+            `;
 
-    if (!name || !url) {
-        alert("Preencha o nome e o link do vídeo!");
-        return;
+            // Só adiciona botão de excluir se o autor for o mesmo do campo
+            if (post.author === currentAuthor) {
+                const btn = document.createElement('button');
+                btn.textContent = 'Excluir';
+                btn.className = 'delete-btn';
+                btn.onclick = () => deletePost(posts.length - 1 - index);
+                div.appendChild(btn);
+            }
+
+            container.appendChild(div);
+        });
+    } catch (e) {
+        console.error('Erro ao carregar posts:', e);
     }
+}
 
-    if (postedNames.has(name.toLowerCase())) {
-        alert("Esse nome já foi usado! Escolha outro.");
-        return;
+// Adiciona novo post
+async function addPost() {
+    const author = document.getElementById('author').value.trim() || 'Anônimo';
+    const videoUrl = document.getElementById('videoUrl').value.trim();
+    if (!videoUrl) { alert('Cole o embed do Streamable!'); return; }
+
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
+
+        // impede nomes duplicados
+        if (posts.some(p => p.author.toLowerCase() === author.toLowerCase())) {
+            alert("Esse nome já foi usado! Escolha outro.");
+            return;
+        }
+
+        posts.push({ author, video: videoUrl });
+
+        await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+            body: JSON.stringify(posts)
+        });
+
+        document.getElementById('videoUrl').value = '';
+        loadPosts();
+    } catch (e) {
+        console.error('Erro ao postar:', e);
+        alert('Não foi possível postar. Confira sua Master Key.');
     }
+}
 
-    // cria o post
-    const post = document.createElement('div');
-    post.classList.add('post');
-    post.innerHTML = `
-        <h3>${name}</h3>
-        <div class="video-wrapper">
-            <iframe src="${url}" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <button class="delete-btn">Excluir</button>
-    `;
+// Exclui post
+async function deletePost(i) {
+    if (!confirm("Tem certeza que quer excluir este post?")) return;
 
-    post.querySelector(".delete-btn").addEventListener("click", () => {
-        post.remove();
-        postedNames.delete(name.toLowerCase());
-    });
+    try {
+        const res = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const posts = data.record || [];
 
-    feedDiv.prepend(post);
+        posts.splice(i, 1); // Remove o post
+        await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+            body: JSON.stringify(posts)
+        });
 
-    // guarda nome
-    postedNames.add(name.toLowerCase());
+        loadPosts();
+    } catch (e) {
+        console.error('Erro ao excluir:', e);
+        alert('Não foi possível excluir o post.');
+    }
+}
 
-    // limpa os campos
-    videoInput.value = "";
-    nameInput.value = "";
-});
+// Inicializa feed
+loadPosts();
 </script>
 </body>
 </html>
