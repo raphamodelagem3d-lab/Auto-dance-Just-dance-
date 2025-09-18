@@ -84,7 +84,7 @@ async function addPost() {
         const data = await res.json();
         const posts = data.record || [];
 
-        // TEMPORÁRIO: comentado para permitir nomes repetidos
+        // TEMPORÁRIO: desativada verificação de nome único
         // if (posts.some(p => p.author === author)) { alert('Nome já existe!'); return; }
 
         posts.push({ author, video: videoUrl });
