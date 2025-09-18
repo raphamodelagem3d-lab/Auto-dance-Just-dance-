@@ -18,36 +18,6 @@ body {
     margin:0;
     padding:0;
 }
-/* --- Tela de avatar --- */
-#avatar-screen {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.85);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-#avatar-screen h1 { color:#ff66ff; margin-bottom:20px; font-family:'TungstenBold'; }
-.avatar-carousel { display:flex; align-items:center; gap:10px; }
-.arrow-btn {
-  background:none; border:none; color:#ff66ff; font-size:2em; cursor:pointer;
-}
-.avatar-grid { display:flex; gap:10px; flex-wrap: wrap; justify-content:center; max-width: 600px;}
-.avatar {
-  width:80px; height:80px; border-radius:12px; overflow:hidden; cursor:pointer;
-  border:2px solid transparent; transition: transform 0.3s, border 0.3s;
-}
-.avatar img { width:100%; height:100%; object-fit:cover; }
-.avatar.selected { border:2px solid #ff66ff; transform:scale(1.1); }
-
-/* --- Site normal --- */
-#main-site { display:none; padding:20px; }
-.avatar-post { width:32px; height:32px; border-radius:50%; vertical-align:middle; margin-right:6px; }
-
-/* --- Seu CSS original --- */
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
     font-weight: normal;
@@ -68,7 +38,10 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-h2 { margin-top:1.5em; color:#ffbb33; }
+h2 {
+    margin-top:1.5em;
+    color:#ffbb33;
+}
 input, button {
     font-size:1em;
     border-radius:12px;
@@ -84,8 +57,14 @@ input[type="text"], input[type="url"], input[type="email"], input[type="password
     backdrop-filter: blur(6px);
     transition: border 0.3s, background 0.3s;
 }
-input::placeholder { color:#ccc; }
-input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
+input::placeholder {
+    color:#ccc;
+}
+input:focus {
+    border:1px solid #ffbb33;
+    background: rgba(255,255,255,0.2);
+    outline:none;
+}
 button {
     background: linear-gradient(135deg, #ff4d4d, #ffbb33);
     color: #fff;
@@ -94,7 +73,11 @@ button {
     transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     padding:0.8em 1.5em;
 }
-button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.6); background: linear-gradient(135deg, #ffbb33, #ff4d4d); }
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255,187,51,0.6);
+    background: linear-gradient(135deg, #ffbb33, #ff4d4d);
+}
 .post {
     background: rgba(30,30,30,0.4);
     backdrop-filter: blur(8px);
@@ -105,13 +88,48 @@ button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
 }
-.post:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.6); }
-.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; }
-.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
-.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px; }
-.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s; }
-.delete-btn:hover { background:#e04343; transform: scale(1.05); }
-.post.own { border: 2px solid #ffbb33; }
+.post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+}
+.author {
+    font-weight:bold;
+    color:#ffbb33;
+    margin-bottom:0.5em;
+}
+.video-container {
+    position:relative;
+    width:100%;
+    height:0;
+    padding-bottom:56.25%;
+    margin-top:0.5em;
+}
+.video-container iframe {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:none;
+    border-radius:8px;
+}
+.delete-btn {
+    margin-top:0.5em;
+    background:#ff5555;
+    color:#fff;
+    border:none;
+    padding:0.5em 1em;
+    border-radius:8px;
+    cursor:pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+.delete-btn:hover {
+    background:#e04343;
+    transform: scale(1.05);
+}
+.post.own {
+    border: 2px solid #ffbb33;
+}
 .tag-box {
     font-family: 'TungstenBold', Arial, sans-serif;
     display: inline-block;
@@ -122,24 +140,92 @@ button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.
     border-radius: 8px;
     font-size: 0.85em;
 }
-#searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
-#searchInput:focus { outline:none; border:1px solid #ffbb33; }
+#searchInput {
+    width:100%;
+    padding:0.8em;
+    margin-bottom:1em;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+}
+#searchInput:focus {
+    outline:none;
+    border:1px solid #ffbb33;
+}
+
+/* CARROSSEL DE AVATAR ESTILO JD2014 */
+#avatar-selection {
+    position: fixed;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.95);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    color:#ffbb33;
+}
+.avatar-carousel {
+    display:flex;
+    align-items:center;
+    margin-top:2em;
+}
+.avatars-container {
+    display:flex;
+    overflow:hidden;
+    width:600px;
+    perspective:1000px;
+}
+.avatar-container {
+    flex:0 0 auto;
+    width:100px;
+    height:100px;
+    margin:0 5px;
+    border-radius:12px;
+    transition: transform 0.4s, opacity 0.4s;
+    cursor:pointer;
+}
+.avatar-container img {
+    width:100%;
+    height:100%;
+    border-radius:12px;
+    object-fit:cover;
+    display:block;
+}
+.avatar-container.center {
+    transform: scale(1.6) translateY(-10px);
+    z-index:2;
+    opacity:1;
+}
+.avatar-container.side {
+    transform: scale(1) translateY(0);
+    z-index:1;
+    opacity:0.6;
+}
+.confirm-btn {
+    margin-top:1.5em; padding:0.8em 1.5em; font-weight:bold;
+}
 </style>
 </head>
 <body>
 
-<!-- Tela de avatar -->
-<div id="avatar-screen">
-  <h1>Escolha seu avatar</h1>
-  <div class="avatar-carousel">
-    <button class="arrow-btn" id="prevBtn">&#8592;</button>
-    <div class="avatar-grid" id="avatarGrid"></div>
-    <button class="arrow-btn" id="nextBtn">&#8594;</button>
-  </div>
+<!-- TELA DE AVATAR -->
+<div id="avatar-selection">
+    <h2>Escolha seu Avatar</h2>
+    <div class="avatar-carousel">
+        <button id="prev-avatar">&#8592;</button>
+        <div class="avatars-container" id="avatars-container"></div>
+        <button id="next-avatar">&#8594;</button>
+    </div>
+    <button id="confirm-avatar" class="confirm-btn">Confirmar</button>
 </div>
 
+<!-- TELA PRINCIPAL -->
+<main id="main-site" style="display:none;">
 <header>Autodance Share Online</header>
-<main>
 
 <h2>Login / Registro</h2>
 <input type="email" id="email" placeholder="Email">
@@ -159,6 +245,7 @@ button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.
 <div id="posts"></div>
 </main>
 
+<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -189,157 +276,180 @@ const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
 
 let currentUser = null;
-let userAvatar = null;
+const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-// --- Avatares ---
-const avatarFolder = "/Just dance avatars/";
-const avatarFiles = [
-  "All I Want for Christmas Is You.png",
-  "American Girl.png",
-  "Applause (Stage).png",
-  "Applause.png",
-  "Aquarius Let The Sunshine In (P1).png",
-  "Aquarius Let The Sunshine In (P2).png"
-  // continue adicionando todos os arquivos aqui
-];
-let currentPage = 0;
-const avatarsPerPage = 6;
-
-const avatarGrid = document.getElementById("avatarGrid");
-function renderAvatars(){
-  avatarGrid.innerHTML="";
-  const start = currentPage*avatarsPerPage;
-  const end = Math.min(start + avatarsPerPage, avatarFiles.length);
-  for(let i=start;i<end;i++){
-    const div=document.createElement("div");
-    div.className="avatar";
-    div.innerHTML=`<img src="${avatarFolder + encodeURIComponent(avatarFiles[i])}" alt="avatar">`;
-    div.onclick=()=>selectAvatar(div, avatarFolder + avatarFiles[i]);
-    avatarGrid.appendChild(div);
-  }
-}
-document.getElementById("prevBtn").onclick=()=>{ if(currentPage>0) currentPage--; renderAvatars(); };
-document.getElementById("nextBtn").onclick=()=>{ if((currentPage+1)*avatarsPerPage<avatarFiles.length) currentPage++; renderAvatars(); };
-
-function selectAvatar(element, path){
-  document.querySelectorAll(".avatar").forEach(a=>a.classList.remove("selected"));
-  element.classList.add("selected");
-  userAvatar = path;
-  localStorage.setItem("selectedAvatar", path);
-  document.getElementById("avatar-screen").style.display="none";
-  document.querySelector("main").style.display="block";
-}
-
-// Avatar salvo
-document.addEventListener("DOMContentLoaded", ()=>{
-  const savedAvatar = localStorage.getItem("selectedAvatar");
-  if(savedAvatar){
-    userAvatar = savedAvatar;
-    document.getElementById("avatar-screen").style.display="none";
-    document.querySelector("main").style.display="block";
-  } else {
-    renderAvatars();
-  }
-});
-
-// --- Login / registro ---
+// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
-  const email = emailInput.value.trim();
-  const senha = senhaInput.value.trim();
-  if(!email||!senha){alert("Preencha email e senha!"); return;}
-  try{ await signInWithEmailAndPassword(auth,email,senha); }
-  catch(e){ 
-    try{ await createUserWithEmailAndPassword(auth,email,senha); }
-    catch(err){ alert(err.message); return; }
-  }
+    const email = emailInput.value.trim();
+    const senha = senhaInput.value.trim();
+    if(!email||!senha){alert("Preencha email e senha!"); return;}
+    try{ await signInWithEmailAndPassword(auth,email,senha); }
+    catch(e){ 
+        try{ await createUserWithEmailAndPassword(auth,email,senha); }
+        catch(err){ alert(err.message); return; }
+    }
 });
 
+// Detecta login
 onAuthStateChanged(auth,user=>{
-  if(user){
-    currentUser=user;
-    authorInput.value = user.email.split("@")[0];
-    authorInput.disabled=false;
-    videoInput.disabled=false;
-    tagsInput.disabled=false;
-    postBtn.disabled=false;
-    loginBtn.disabled=true;
-    emailInput.disabled=true;
-    senhaInput.disabled=true;
-    loadPosts();
-  } else {
-    currentUser=null;
-    authorInput.disabled=true;
-    videoInput.disabled=true;
-    tagsInput.disabled=true;
-    postBtn.disabled=true;
-    loginBtn.disabled=false;
-    emailInput.disabled=false;
-    senhaInput.disabled=false;
-    postsContainer.innerHTML="";
-  }
+    if(user){
+        currentUser=user;
+        authorInput.value = user.email.split("@")[0];
+        authorInput.disabled=false;
+        videoInput.disabled=false;
+        tagsInput.disabled=false;
+        postBtn.disabled=false;
+        loginBtn.disabled=true;
+        emailInput.disabled=true;
+        senhaInput.disabled=true;
+        loadPosts();
+    } else {
+        currentUser=null;
+        authorInput.disabled=true;
+        videoInput.disabled=true;
+        tagsInput.disabled=true;
+        postBtn.disabled=true;
+        loginBtn.disabled=false;
+        emailInput.disabled=false;
+        senhaInput.disabled=false;
+        postsContainer.innerHTML="";
+    }
 });
 
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
-  const author = authorInput.value;
-  const video = videoInput.value.trim();
-  let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
-  const postRef = push(ref(db,"posts"));
-  await set(postRef,{author,video,tags,uid:currentUser.uid, avatar:userAvatar});
-  videoInput.value=""; tagsInput.value="";
+    const author = authorInput.value;
+    const video = videoInput.value.trim();
+    let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
+    if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
+    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
+    const postRef = push(ref(db,"posts"));
+    await set(postRef,{author,video,tags,uid:currentUser.uid});
+    videoInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
 function loadPosts(){
-  onValue(ref(db,"posts"),snapshot=>{
-    postsContainer.innerHTML="";
-    const data = snapshot.val();
-    if(!data) return;
-    Object.entries(data).reverse().forEach(([key,post])=>{
-      const div = document.createElement("div");
-      div.className="post";
-      if(post.uid===currentUser.uid) div.classList.add("own");
-      div.innerHTML=`
-        <div class="author">
-          ${post.avatar ? `<img src="${post.avatar}" class="avatar-post">` : ""}
-          ${post.author}:
-        </div>
-        <div class="video-container">
-          <iframe src="${post.video}" allowfullscreen></iframe>
-        </div>
-      `;
-      if(post.tags&&post.tags.length){
-        const tagsContainer=document.createElement("div");
-        tagsContainer.style.marginTop="0.5em";
-        post.tags.forEach(tag=>{
-          const tagBox=document.createElement("span");
-          tagBox.className="tag-box";
-          tagBox.textContent=tag;
-          tagsContainer.appendChild(tagBox);
+    onValue(ref(db,"posts"),snapshot=>{
+        postsContainer.innerHTML="";
+        const data = snapshot.val();
+        if(!data) return;
+        Object.entries(data).reverse().forEach(([key,post])=>{
+            const div = document.createElement("div");
+            div.className="post";
+            if(post.uid===currentUser.uid) div.classList.add("own");
+            div.innerHTML=`
+                <div class="author">${post.author}:</div>
+                <div class="video-container">
+                    <iframe src="${post.video}" allowfullscreen></iframe>
+                </div>
+            `;
+            if(post.tags&&post.tags.length){
+                const tagsContainer=document.createElement("div");
+                tagsContainer.style.marginTop="0.5em";
+                post.tags.forEach(tag=>{
+                    const tagBox=document.createElement("span");
+                    tagBox.className="tag-box";
+                    tagBox.textContent=tag;
+                    tagsContainer.appendChild(tagBox);
+                });
+                div.appendChild(tagsContainer);
+            }
+            if(post.uid===currentUser.uid){
+                const delBtn=document.createElement("button");
+                delBtn.textContent="Excluir";
+                delBtn.className="delete-btn";
+                delBtn.onclick=()=>remove(ref(db,"posts/"+key));
+                div.appendChild(delBtn);
+            }
+            postsContainer.appendChild(div);
         });
-        div.appendChild(tagsContainer);
-      }
-      if(post.uid===currentUser.uid){
-        const delBtn=document.createElement("button");
-        delBtn.textContent="Excluir";
-        delBtn.className="delete-btn";
-        delBtn.onclick=()=>remove(ref(db,"posts/"+key));
-        div.appendChild(delBtn);
-      }
-      postsContainer.appendChild(div);
     });
-  });
 }
 
 // Filtrar pesquisa
 searchInput.addEventListener("input", ()=>{
-  const filter = searchInput.value.trim().toLowerCase();
-  const posts = postsContainer.querySelectorAll(".post");
-  posts.forEach(p=>{
-    const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
-    p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
-  });
+    const filter = searchInput.value.trim().toLowerCase();
+    const posts = postsContainer.querySelectorAll(".post");
+    posts.forEach(p=>{
+        const tags = Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
+    });
 });
+
+// --- CARROSSEL AVATAR ---
+const avatarFiles = [
+"All I Want for Christmas Is You.png","American Girl.png","Applause (Stage).png","Applause.png","Aquarius Let The Sunshine In (P1).png",
+"Aquarius Let The Sunshine In (P2).png","Blame It on the Boogie (P3).png","Blurred Lines (Extreme).png","Blurred Lines (P1).png",
+"Blurred Lines (P2).png","Candy (P2).png","Can’t Get Enough.png","Can’t Hold Us.png","Careless Whisper (P1).png","Could You Be Loved (P1).png",
+"C’mon (P1).png","C’mon (P2).png","Dançando (Fankit Avatar).png","Dançando.png","Danse (Pop Version).png","Don’t You Worry Child.png",
+"Feel So Right.png","Feel This Moment.png","Fine China (Extreme).png","Fine China.png","Flashdance... What a Feeling.png","Follow the Leader.png",
+"Gentleman (C1).png","Gentleman (C2).png","Gentleman (Sweat).png","Get Lucky (P1).png","Get Lucky (P2).png","Ghostbusters (P1).png",
+"Ghostbusters (P2).png","Ghostbusters (P3).png","Ghostbusters (P4).png","Ghostbusters (Sweat).png","Gimme! Gimme! Gimme! (A Man After Midnight) (On-Stage).png",
+"Gimme! Gimme! Gimme! (A Man After Midnight).png","I Kissed a Girl (Sing Along).png","I Kissed a Girl (Sweat).png","I Kissed a Girl.png",
+"I Need Your Love.png","I Will Survive (On-Stage).png","I Will Survive.png","In the Summertime.png","Isidora.png","It’s You (Sweat).png",
+"It’s You.png","Just A Gigolo (P1).png","Just A Gigolo (P2).png","Just Dance (C1).png","Just Dance (C2).png","Just Dance (Sing Along).png",
+"Just Dance (Sweat).png","Kiss You (6-Player) (P1).png","Kiss You (P2).png","Kiss You (P3).png","Limbo (P1).png","Limbo (P2).png","Love Boat.png",
+"María.png","Miss Understood.png","Moskau (P1).png","My Main Girl.png","Nitro Bot (P1).png","Nitro Bot (P2).png","One Way Or Another (Teenage Kicks).png",
+"Pound The Alarm (Extreme).png","Pound The Alarm (P3).png","Prince Ali (P4).png","Rich Girl.png","Roar.png","Rock n Roll.png","Safe And Sound (C1).png",
+"Sexy And I Know It.png","She Wolf (Falling to Pieces).png","Starships (Charleston) (P1).png","Starships.png","The Other Side.png",
+"The Way (P2).png","The World is Ours.png","Timber (P1).png","Timber (P2).png","Troublemaker.png","Turn Up The Love (P1).png",
+"Turn Up The Love (Sumo) (P3).png","Wake Me Up (C1).png","Wake Me Up (C2).png","Waking Up in Vegas.png","We Can’t Stop.png","What About Love.png",
+"Where Have You Been.png","Wild.png","Y.M.C.A. (P1).png","Y.M.C.A. (P2).png","Y.M.C.A. (P3).png","Y.M.C.A. (P4).png"
+];
+
+const avatarsContainer = document.getElementById("avatars-container");
+let centerIndex = 0;
+
+// Cria elementos dos avatares
+avatarFiles.forEach((file,i)=>{
+    const div = document.createElement("div");
+    div.className="avatar-container";
+    const img = document.createElement("img");
+    img.src = `/Just dance avatars/${file}`;
+    div.appendChild(img);
+    div.addEventListener("click", ()=>{
+        centerIndex = i;
+        updateCarousel();
+    });
+    avatarsContainer.appendChild(div);
+});
+
+// Atualiza visual do carrossel
+function updateCarousel(){
+    const children = avatarsContainer.children;
+    for(let i=0;i<children.length;i++){
+        const diff = i - centerIndex;
+        if(diff===0){
+            children[i].className="avatar-container center";
+        } else if(diff===-1 || diff===1){
+            children[i].className="avatar-container side";
+        } else {
+            children[i].className="avatar-container";
+            children[i].style.opacity=0.3;
+        }
+    }
+    const scrollPos = (centerIndex - 1) * 110;
+    avatarsContainer.scrollTo({left:scrollPos, behavior:"smooth"});
+}
+
+// Botões de navegação
+document.getElementById("prev-avatar").addEventListener("click", ()=>{
+    if(centerIndex>0){ centerIndex--; updateCarousel(); }
+});
+document.getElementById("next-avatar").addEventListener("click", ()=>{
+    if(centerIndex<avatarFiles.length-1){ centerIndex++; updateCarousel(); }
+});
+
+// Confirmar avatar
+document.getElementById("confirm-avatar").addEventListener("click", ()=>{
+    localStorage.setItem("selectedAvatar", `/Just dance avatars/${avatarFiles[centerIndex]}`);
+    document.getElementById("avatar-selection").style.display="none";
+    document.getElementById("main-site").style.display="block";
+});
+
+// Inicializa
+updateCarousel();
 </script>
 </body>
 </html>
