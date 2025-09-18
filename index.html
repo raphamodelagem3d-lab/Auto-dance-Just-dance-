@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
+/* Fonte Tungsten Bold */
 @font-face {
     font-family: 'TungstenBold';
     src: url('Tungsten Bold.ttf') format('truetype');
@@ -21,13 +22,15 @@ body {
 
 header {
     font-family: 'TungstenBold', Arial, sans-serif;
-    background:#ff4d4d;
-    padding:1.5em;
-    text-align:center;
-    font-size:2.5em;
-    text-transform:uppercase;
-    letter-spacing:2px;
+    font-weight: normal;
+    background: rgba(255,77,77,0.3); /* laranja transparente */
+    padding: 1.2em;
+    text-align: center;
+    font-size: 2.2em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border-radius: 0 0 12px 12px;
 }
 
 main {
@@ -142,7 +145,6 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Destaque para seus posts */
 .post.own {
     border: 2px solid #ffbb33;
 }
@@ -165,7 +167,7 @@ button:hover {
 const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/68cb524f43b1c97be9469a7a';
 const JSONBIN_KEY = '$2a$10$tRSl.w9zvPSnAMtnGO8gVO1fZMmlHtZ8r7QKVDY.zyfu0p25IzUnC';
 
-// Recupera ou cria ID secreto no navegador
+// ID secreto no navegador
 let localId = localStorage.getItem("autodanceUserId");
 if (!localId) {
     localId = crypto.randomUUID(); 
