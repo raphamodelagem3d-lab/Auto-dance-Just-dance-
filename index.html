@@ -57,9 +57,6 @@ button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.
 .tag-box { font-family: 'TungstenBold', Arial, sans-serif; display: inline-block; background: rgba(255,187,51,0.2); color: #ffbb33; padding: 4px 10px; margin: 3px 3px 0 0; border-radius: 8px; font-size: 0.85em; }
 #searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
 #searchInput:focus { outline:none; border:1px solid #ffbb33; }
-#avatarSelection { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:1em; }
-#avatarSelection img { width:80px; height:80px; object-fit:cover; border-radius:12px; cursor:pointer; transition: transform 0.2s; }
-#avatarSelection img:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(255,187,51,0.6); }
 </style>
 </head>
 <body>
@@ -70,9 +67,6 @@ button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="senha" placeholder="Senha">
 <button id="loginBtn">Login / Criar conta</button>
-
-<h2>Selecione seu avatar</h2>
-<div id="avatarSelection"></div>
 
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
@@ -115,18 +109,9 @@ const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
 const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
-const avatarContainer = document.getElementById('avatarSelection');
 
 let currentUser = null;
-
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
-
-// Lista de arquivos de avatar (coloque todos que você tiver)
-const avatarFiles = [
-"All I Want for Christmas Is You.png","American Girl.png","Applause (Stage).png","Applause.png","Aquarius Let The Sunshine In (P1).png",
-"Aquarius Let The Sunshine In (P2).png","Blame It on the Boogie (P3).png","Blurred Lines (Extreme).png","Blurred Lines (P1).png",
-"Blurred Lines (P2).png","Candy (P2).png","Can’t Get Enough.png","Can’t Hold Us.png"
-];
 
 // Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
@@ -166,21 +151,6 @@ onAuthStateChanged(auth,user=>{
     }
 });
 
-// Preenche seleção de avatar
-avatarFiles.forEach(file => {
-    const img = document.createElement('img');
-    img.src = `/Just dance avatars/${file}`;
-    img.alt = file;
-    img.onclick = async () => {
-        if(currentUser){
-            const userRef = ref(db,"users/"+currentUser.uid);
-            await set(userRef, { avatar: file });
-            alert("Avatar selecionado!");
-        }
-    };
-    avatarContainer.appendChild(img);
-});
-
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
     const author = authorInput.value;
@@ -203,21 +173,12 @@ async function loadPosts(){
             const div = document.createElement("div");
             div.className="post";
             if(post.uid===currentUser.uid) div.classList.add("own");
-
-            let avatarFile = "default.png";
-            const userSnap = await get(ref(db,"users/"+post.uid));
-            if(userSnap.exists()) avatarFile = userSnap.val().avatar;
-
             div.innerHTML=`
-                <div class="author">
-                    <img src="/Just dance avatars/${avatarFile}" style="width:40px;height:40px;border-radius:50%;">
-                    ${post.author}:
-                </div>
+                <div class="author">${post.author}:</div>
                 <div class="video-container">
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
             `;
-
             if(post.tags&&post.tags.length){
                 const tagsContainer=document.createElement("div");
                 tagsContainer.style.marginTop="0.5em";
@@ -229,7 +190,6 @@ async function loadPosts(){
                 });
                 div.appendChild(tagsContainer);
             }
-
             if(post.uid===currentUser.uid){
                 const delBtn=document.createElement("button");
                 delBtn.textContent="Excluir";
