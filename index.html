@@ -97,11 +97,6 @@ button:hover {
     color:#ffbb33;
     margin-bottom:0.5em;
 }
-.music-title {
-    font-weight:bold;
-    color:#ffbb33;
-    margin-bottom:0.5em;
-}
 .video-container {
     position:relative;
     width:100%;
@@ -117,6 +112,19 @@ button:hover {
     height:100%;
     border:none;
     border-radius:8px;
+}
+.music-title {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-family: 'TungstenBold', Arial, sans-serif;
+    font-weight: normal;
+    color: #ffbb33;
+    font-size: 1.2em;
+    background: rgba(0,0,0,0.4);
+    padding: 4px 8px;
+    border-radius: 6px;
+    z-index: 2;
 }
 .delete-btn {
     margin-top:0.5em;
@@ -172,7 +180,7 @@ button:hover {
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
-<input type="text" id="musicTitle" placeholder="Nome da música" disabled>
+<input type="text" id="music" placeholder="Nome da música" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
 
@@ -183,7 +191,6 @@ button:hover {
 <div id="posts"></div>
 </main>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -208,7 +215,7 @@ const senhaInput = document.getElementById("senha");
 const loginBtn = document.getElementById("loginBtn");
 const authorInput = document.getElementById("author");
 const videoInput = document.getElementById("videoUrl");
-const musicInput = document.getElementById("musicTitle");
+const musicInput = document.getElementById("music");
 const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
 const postsContainer = document.getElementById("posts");
@@ -266,6 +273,7 @@ postBtn.addEventListener("click", async ()=>{
     const music = musicInput.value.trim();
     let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
     if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
+    if(!music){ alert("Insira o nome da música!"); return;}
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
     const postRef = push(ref(db,"posts"));
     await set(postRef,{author,video,music,tags,uid:currentUser.uid});
@@ -284,8 +292,8 @@ function loadPosts(){
             if(post.uid===currentUser.uid) div.classList.add("own");
             div.innerHTML=`
                 <div class="author">${post.author}:</div>
-                <div class="music-title">🎵 ${post.music}</div>
                 <div class="video-container">
+                    <div class="music-title">${post.music}</div>
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
             `;
