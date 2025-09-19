@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
-/* Fonte Tungsten Bold */
 @font-face {
     font-family: 'TungstenBold';
     src: url('Tungsten-Bold.ttf') format('truetype');
@@ -38,134 +37,28 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-h2 {
-    margin-top:1.5em;
-    color:#ffbb33;
-}
-input, button {
-    font-size:1em;
-    border-radius:12px;
-    border:none;
-    padding:0.8em;
-    margin-bottom:0.5em;
-}
+h2 { margin-top:1.5em; color:#ffbb33; }
+input, button { font-size:1em; border-radius:12px; border:none; padding:0.8em; margin-bottom:0.5em; }
 input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
-    width:100%;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(6px);
-    transition: border 0.3s, background 0.3s;
+    width:100%; background: rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); backdrop-filter: blur(6px); transition: border 0.3s, background 0.3s;
 }
-input::placeholder {
-    color:#ccc;
-}
-input:focus {
-    border:1px solid #ffbb33;
-    background: rgba(255,255,255,0.2);
-    outline:none;
-}
-button {
-    background: linear-gradient(135deg, #ff4d4d, #ffbb33);
-    color: #fff;
-    font-weight: bold;
-    cursor:pointer;
-    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
-    padding:0.8em 1.5em;
-}
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255,187,51,0.6);
-    background: linear-gradient(135deg, #ffbb33, #ff4d4d);
-}
-.post {
-    background: rgba(30,30,30,0.4);
-    backdrop-filter: blur(8px);
-    padding:1em;
-    border-radius:12px;
-    margin-bottom:1em;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-}
-.post:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-}
-.author {
-    font-weight:bold;
-    color:#ffbb33;
-    margin-bottom:0.5em;
-}
-.video-container {
-    position:relative;
-    width:100%;
-    height:0;
-    padding-bottom:56.25%;
-    margin-top:0.5em;
-}
-.video-container iframe {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    border:none;
-    border-radius:8px;
-}
-.music-title {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    font-family: 'TungstenBold', Arial, sans-serif;
-    font-weight: normal;
-    color: #ffbb33;
-    font-size: 1.2em;
-    background: rgba(0,0,0,0.4);
-    padding: 4px 8px;
-    border-radius: 6px;
-    z-index: 2;
-}
-.delete-btn {
-    margin-top:0.5em;
-    background:#ff5555;
-    color:#fff;
-    border:none;
-    padding:0.5em 1em;
-    border-radius:8px;
-    cursor:pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-.delete-btn:hover {
-    background:#e04343;
-    transform: scale(1.05);
-}
-.post.own {
-    border: 2px solid #ffbb33;
-}
-.tag-box {
-    font-family: 'TungstenBold', Arial, sans-serif;
-    display: inline-block;
-    background: rgba(255,187,51,0.2);
-    color: #ffbb33;
-    padding: 4px 10px;
-    margin: 3px 3px 0 0;
-    border-radius: 8px;
-    font-size: 0.85em;
-}
-#searchInput {
-    width:100%;
-    padding:0.8em;
-    margin-bottom:1em;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-#searchInput:focus {
-    outline:none;
-    border:1px solid #ffbb33;
-}
+input::placeholder { color:#ccc; }
+input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
+button { background: linear-gradient(135deg, #ff4d4d, #ffbb33); color: #fff; font-weight: bold; cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.3s; padding:0.8em 1.5em; }
+button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.6); background: linear-gradient(135deg, #ffbb33, #ff4d4d); }
+.post { background: rgba(30,30,30,0.4); backdrop-filter: blur(8px); padding:1em; border-radius:12px; margin-bottom:1em; box-shadow: 0 8px 20px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+.post:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.6); }
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; display:flex; align-items:center; gap:8px; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px; }
+.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s; }
+.delete-btn:hover { background:#e04343; transform: scale(1.05); }
+.post.own { border: 2px solid #ffbb33; }
+.tag-box { font-family: 'TungstenBold', Arial, sans-serif; display: inline-block; background: rgba(255,187,51,0.2); color: #ffbb33; padding: 4px 10px; margin: 3px 3px 0 0; border-radius: 8px; font-size: 0.85em; }
+#searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
+#searchInput:focus { outline:none; border:1px solid #ffbb33; }
+#avatarSelection img { transition: transform 0.2s; }
+#avatarSelection img:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(255,187,51,0.6); }
 </style>
 </head>
 <body>
@@ -177,10 +70,12 @@ button:hover {
 <input type="password" id="senha" placeholder="Senha">
 <button id="loginBtn">Login / Criar conta</button>
 
+<h2>Selecione seu avatar</h2>
+<div id="avatarSelection" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
-<input type="text" id="music" placeholder="Nome da música" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
 
@@ -194,7 +89,7 @@ button:hover {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
@@ -215,16 +110,21 @@ const senhaInput = document.getElementById("senha");
 const loginBtn = document.getElementById("loginBtn");
 const authorInput = document.getElementById("author");
 const videoInput = document.getElementById("videoUrl");
-const musicInput = document.getElementById("music");
 const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
 const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
+const avatarContainer = document.getElementById('avatarSelection');
 
 let currentUser = null;
 
-// Palavras impróprias
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
+
+const avatarFiles = [
+"All I Want for Christmas Is You.png","American Girl.png","Applause (Stage).png","Applause.png","Aquarius Let The Sunshine In (P1).png",
+"Aquarius Let The Sunshine In (P2).png","Blame It on the Boogie (P3).png","Blurred Lines (Extreme).png","Blurred Lines (P1).png",
+"Blurred Lines (P2).png","Candy (P2).png","Can’t Get Enough.png","Can’t Hold Us.png" // ...continue com todos os avatares
+];
 
 // Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
@@ -245,7 +145,6 @@ onAuthStateChanged(auth,user=>{
         authorInput.value = user.email.split("@")[0];
         authorInput.disabled=false;
         videoInput.disabled=false;
-        musicInput.disabled=false;
         tagsInput.disabled=false;
         postBtn.disabled=false;
         loginBtn.disabled=true;
@@ -256,7 +155,6 @@ onAuthStateChanged(auth,user=>{
         currentUser=null;
         authorInput.disabled=true;
         videoInput.disabled=true;
-        musicInput.disabled=true;
         tagsInput.disabled=true;
         postBtn.disabled=true;
         loginBtn.disabled=false;
@@ -266,37 +164,63 @@ onAuthStateChanged(auth,user=>{
     }
 });
 
+// Preenche seleção de avatar
+avatarFiles.forEach(file => {
+    const img = document.createElement('img');
+    img.src = `/Just dance avatars/${file}`;
+    img.alt = file;
+    img.style.width = '80px';
+    img.style.height = '80px';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '12px';
+    img.style.cursor = 'pointer';
+    img.onclick = async () => {
+        if(currentUser){
+            const userRef = ref(db,"users/"+currentUser.uid);
+            await set(userRef, { avatar: file });
+            alert("Avatar selecionado!");
+        }
+    };
+    avatarContainer.appendChild(img);
+});
+
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
     const author = authorInput.value;
     const video = videoInput.value.trim();
-    const music = musicInput.value.trim();
     let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
     if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
-    if(!music){ alert("Insira o nome da música!"); return;}
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
     const postRef = push(ref(db,"posts"));
-    await set(postRef,{author,video,music,tags,uid:currentUser.uid});
-    videoInput.value=""; musicInput.value=""; tagsInput.value="";
+    await set(postRef,{author,video,tags,uid:currentUser.uid});
+    videoInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
-function loadPosts(){
+async function loadPosts(){
     onValue(ref(db,"posts"),snapshot=>{
         postsContainer.innerHTML="";
         const data = snapshot.val();
         if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
+        Object.entries(data).reverse().forEach(async ([key,post])=>{
             const div = document.createElement("div");
             div.className="post";
             if(post.uid===currentUser.uid) div.classList.add("own");
+
+            let avatarFile = "default.png";
+            const userSnap = await get(ref(db,"users/"+post.uid));
+            if(userSnap.exists()) avatarFile = userSnap.val().avatar;
+
             div.innerHTML=`
-                <div class="author">${post.author}:</div>
+                <div class="author">
+                    <img src="/Just dance avatars/${avatarFile}" style="width:40px;height:40px;border-radius:50%;">
+                    ${post.author}:
+                </div>
                 <div class="video-container">
-                    <div class="music-title">${post.music}</div>
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
             `;
+
             if(post.tags&&post.tags.length){
                 const tagsContainer=document.createElement("div");
                 tagsContainer.style.marginTop="0.5em";
@@ -308,6 +232,7 @@ function loadPosts(){
                 });
                 div.appendChild(tagsContainer);
             }
+
             if(post.uid===currentUser.uid){
                 const delBtn=document.createElement("button");
                 delBtn.textContent="Excluir";
