@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -98,6 +97,11 @@ button:hover {
     color:#ffbb33;
     margin-bottom:0.5em;
 }
+.music-title {
+    font-weight:bold;
+    color:#ffbb33;
+    margin-bottom:0.5em;
+}
 .video-container {
     position:relative;
     width:100%;
@@ -168,6 +172,7 @@ button:hover {
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
+<input type="text" id="musicTitle" placeholder="Nome da música" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
 
@@ -203,6 +208,7 @@ const senhaInput = document.getElementById("senha");
 const loginBtn = document.getElementById("loginBtn");
 const authorInput = document.getElementById("author");
 const videoInput = document.getElementById("videoUrl");
+const musicInput = document.getElementById("musicTitle");
 const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
 const postsContainer = document.getElementById("posts");
@@ -232,6 +238,7 @@ onAuthStateChanged(auth,user=>{
         authorInput.value = user.email.split("@")[0];
         authorInput.disabled=false;
         videoInput.disabled=false;
+        musicInput.disabled=false;
         tagsInput.disabled=false;
         postBtn.disabled=false;
         loginBtn.disabled=true;
@@ -242,6 +249,7 @@ onAuthStateChanged(auth,user=>{
         currentUser=null;
         authorInput.disabled=true;
         videoInput.disabled=true;
+        musicInput.disabled=true;
         tagsInput.disabled=true;
         postBtn.disabled=true;
         loginBtn.disabled=false;
@@ -255,12 +263,13 @@ onAuthStateChanged(auth,user=>{
 postBtn.addEventListener("click", async ()=>{
     const author = authorInput.value;
     const video = videoInput.value.trim();
+    const music = musicInput.value.trim();
     let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
     if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
     const postRef = push(ref(db,"posts"));
-    await set(postRef,{author,video,tags,uid:currentUser.uid});
-    videoInput.value=""; tagsInput.value="";
+    await set(postRef,{author,video,music,tags,uid:currentUser.uid});
+    videoInput.value=""; musicInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
@@ -275,6 +284,7 @@ function loadPosts(){
             if(post.uid===currentUser.uid) div.classList.add("own");
             div.innerHTML=`
                 <div class="author">${post.author}:</div>
+                <div class="music-title">🎵 ${post.music}</div>
                 <div class="video-container">
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
