@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
-/* Fonte Tungsten Bold */
 @font-face {
     font-family: 'TungstenBold';
     src: url('Tungsten-Bold.ttf') format('truetype');
@@ -38,133 +37,29 @@ main {
     backdrop-filter: blur(10px);
     border-radius: 16px;
 }
-h2 {
-    margin-top:1.5em;
-    color:#ffbb33;
-}
-input, button {
-    font-size:1em;
-    border-radius:12px;
-    border:none;
-    padding:0.8em;
-    margin-bottom:0.5em;
-}
+h2 { margin-top:1.5em; color:#ffbb33; }
+input, button { font-size:1em; border-radius:12px; border:none; padding:0.8em; margin-bottom:0.5em; }
 input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
-    width:100%;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(6px);
-    transition: border 0.3s, background 0.3s;
+    width:100%; background: rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); backdrop-filter: blur(6px); transition: border 0.3s, background 0.3s;
 }
-input::placeholder {
-    color:#ccc;
-}
-input:focus {
-    border:1px solid #ffbb33;
-    background: rgba(255,255,255,0.2);
-    outline:none;
-}
-button {
-    background: linear-gradient(135deg, #ff4d4d, #ffbb33);
-    color: #fff;
-    font-weight: bold;
-    cursor:pointer;
-    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
-    padding:0.8em 1.5em;
-}
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255,187,51,0.6);
-    background: linear-gradient(135deg, #ffbb33, #ff4d4d);
-}
-.post {
-    background: rgba(30,30,30,0.4);
-    backdrop-filter: blur(8px);
-    padding:1em;
-    border-radius:12px;
-    margin-bottom:1em;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-}
-.post:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.6);
-}
-.author {
-    font-weight:bold;
-    color:#ffbb33;
-    margin-bottom:0.5em;
-}
-.video-container {
-    position:relative;
-    width:100%;
-    height:0;
-    padding-bottom:56.25%;
-    margin-top:0.5em;
-}
-.video-container iframe {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    border:none;
-    border-radius:8px;
-}
-.delete-btn {
-    margin-top:0.5em;
-    background:#ff5555;
-    color:#fff;
-    border:none;
-    padding:0.5em 1em;
-    border-radius:8px;
-    cursor:pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-.delete-btn:hover {
-    background:#e04343;
-    transform: scale(1.05);
-}
-.post.own {
-    border: 2px solid #ffbb33;
-}
-.tag-box {
-    font-family: 'TungstenBold', Arial, sans-serif;
-    display: inline-block;
-    background: rgba(255,187,51,0.2);
-    color: #ffbb33;
-    padding: 4px 10px;
-    margin: 3px 3px 0 0;
-    border-radius: 8px;
-    font-size: 0.85em;
-}
-#searchInput {
-    width:100%;
-    padding:0.8em;
-    margin-bottom:1em;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-#searchInput:focus {
-    outline:none;
-    border:1px solid #ffbb33;
-}
-/* Música */
-#musicName {
-    font-family: 'TungstenBold', Arial, sans-serif;
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    font-size: 1.4em;
-    color: #ffbb33;
-    background: rgba(0,0,0,0.5);
-    padding: 6px 12px;
-    border-radius: 12px;
-}
+input::placeholder { color:#ccc; }
+input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
+button { background: linear-gradient(135deg, #ff4d4d, #ffbb33); color: #fff; font-weight: bold; cursor:pointer; transition: transform 0.2s, box-shadow 0.2s, background 0.3s; padding:0.8em 1.5em; }
+button:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,187,51,0.6); background: linear-gradient(135deg, #ffbb33, #ff4d4d); }
+.post { background: rgba(30,30,30,0.4); backdrop-filter: blur(8px); padding:1em; border-radius:12px; margin-bottom:1em; box-shadow: 0 8px 20px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+.post:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.6); }
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; display:flex; align-items:center; gap:8px; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px; }
+.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s; }
+.delete-btn:hover { background:#e04343; transform: scale(1.05); }
+.post.own { border: 2px solid #ffbb33; }
+.tag-box { font-family: 'TungstenBold', Arial, sans-serif; display: inline-block; background: rgba(255,187,51,0.2); color: #ffbb33; padding: 4px 10px; margin: 3px 3px 0 0; border-radius: 8px; font-size: 0.85em; }
+#searchInput { width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff; }
+#searchInput:focus { outline:none; border:1px solid #ffbb33; }
+#avatarSelection { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:1em; }
+#avatarSelection img { width:80px; height:80px; object-fit:cover; border-radius:12px; cursor:pointer; transition: transform 0.2s; }
+#avatarSelection img:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(255,187,51,0.6); }
 </style>
 </head>
 <body>
@@ -176,11 +71,13 @@ button:hover {
 <input type="password" id="senha" placeholder="Senha">
 <button id="loginBtn">Login / Criar conta</button>
 
+<h2>Selecione seu avatar</h2>
+<div id="avatarSelection"></div>
+
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
-<input type="text" id="musicNameInput" placeholder="Nome da música" disabled>
 <button id="postBtn" disabled>Postar</button>
 
 <h2>Pesquisar por tag</h2>
@@ -190,24 +87,10 @@ button:hover {
 <div id="posts"></div>
 </main>
 
-<!-- Exibe música -->
-<div id="musicName">Nenhuma música</div>
-
-<!-- Tela de Seleção de Avatar -->
-<div id="avatarSelection" style="
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.95);
-    display:flex; flex-wrap: wrap; justify-content: center; align-items: center;
-    overflow-y: auto; z-index: 9999;
-"></div>
-
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, push, remove, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
@@ -232,13 +115,18 @@ const tagsInput = document.getElementById("tags");
 const postBtn = document.getElementById("postBtn");
 const postsContainer = document.getElementById("posts");
 const searchInput = document.getElementById("searchInput");
-const musicNameInput = document.getElementById("musicNameInput");
-const musicNameDisplay = document.getElementById("musicName");
+const avatarContainer = document.getElementById('avatarSelection');
 
 let currentUser = null;
 
-// Palavras impróprias
 const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
+
+// Lista de arquivos de avatar (coloque todos que você tiver)
+const avatarFiles = [
+"All I Want for Christmas Is You.png","American Girl.png","Applause (Stage).png","Applause.png","Aquarius Let The Sunshine In (P1).png",
+"Aquarius Let The Sunshine In (P2).png","Blame It on the Boogie (P3).png","Blurred Lines (Extreme).png","Blurred Lines (P1).png",
+"Blurred Lines (P2).png","Candy (P2).png","Can’t Get Enough.png","Can’t Hold Us.png"
+];
 
 // Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
@@ -261,19 +149,16 @@ onAuthStateChanged(auth,user=>{
         videoInput.disabled=false;
         tagsInput.disabled=false;
         postBtn.disabled=false;
-        musicNameInput.disabled=false;
         loginBtn.disabled=true;
         emailInput.disabled=true;
         senhaInput.disabled=true;
         loadPosts();
-        loadUserAvatar();
     } else {
         currentUser=null;
         authorInput.disabled=true;
         videoInput.disabled=true;
         tagsInput.disabled=true;
         postBtn.disabled=true;
-        musicNameInput.disabled=true;
         loginBtn.disabled=false;
         emailInput.disabled=false;
         senhaInput.disabled=false;
@@ -281,37 +166,58 @@ onAuthStateChanged(auth,user=>{
     }
 });
 
+// Preenche seleção de avatar
+avatarFiles.forEach(file => {
+    const img = document.createElement('img');
+    img.src = `/Just dance avatars/${file}`;
+    img.alt = file;
+    img.onclick = async () => {
+        if(currentUser){
+            const userRef = ref(db,"users/"+currentUser.uid);
+            await set(userRef, { avatar: file });
+            alert("Avatar selecionado!");
+        }
+    };
+    avatarContainer.appendChild(img);
+});
+
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
     const author = authorInput.value;
     const video = videoInput.value.trim();
-    const music = musicNameInput.value.trim();
     let tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
     if(!video.includes("streamable.com")){ alert("Só é permitido Streamable!"); return;}
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return;}
     const postRef = push(ref(db,"posts"));
-    await set(postRef,{author,video,tags,uid:currentUser.uid,music});
-    videoInput.value=""; tagsInput.value=""; musicNameInput.value="";
-    musicNameDisplay.textContent = "Nenhuma música";
+    await set(postRef,{author,video,tags,uid:currentUser.uid});
+    videoInput.value=""; tagsInput.value="";
 });
 
 // Carrega posts
-function loadPosts(){
+async function loadPosts(){
     onValue(ref(db,"posts"),snapshot=>{
         postsContainer.innerHTML="";
         const data = snapshot.val();
         if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
+        Object.entries(data).reverse().forEach(async ([key,post])=>{
             const div = document.createElement("div");
             div.className="post";
             if(post.uid===currentUser.uid) div.classList.add("own");
+
+            let avatarFile = "default.png";
+            const userSnap = await get(ref(db,"users/"+post.uid));
+            if(userSnap.exists()) avatarFile = userSnap.val().avatar;
+
             div.innerHTML=`
-                <div class="author">${post.author}:</div>
+                <div class="author">
+                    <img src="/Just dance avatars/${avatarFile}" style="width:40px;height:40px;border-radius:50%;">
+                    ${post.author}:
+                </div>
                 <div class="video-container">
                     <iframe src="${post.video}" allowfullscreen></iframe>
                 </div>
-                <div class="music-display">🎵 ${post.music || ""}</div>
             `;
+
             if(post.tags&&post.tags.length){
                 const tagsContainer=document.createElement("div");
                 tagsContainer.style.marginTop="0.5em";
@@ -323,6 +229,7 @@ function loadPosts(){
                 });
                 div.appendChild(tagsContainer);
             }
+
             if(post.uid===currentUser.uid){
                 const delBtn=document.createElement("button");
                 delBtn.textContent="Excluir";
@@ -344,142 +251,6 @@ searchInput.addEventListener("input", ()=>{
         p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
     });
 });
-
-// Música
-musicNameInput.addEventListener("input", ()=>{
-    musicNameDisplay.textContent = musicNameInput.value || "Nenhuma música";
-});
-
-// Avatares
-const avatars = [
-  "danse_pop_version.png",
-  "dont_you_worry_child.png",
-  "feel_so_right.png",
-  "feel_this_moment.png",
-  "fine_china_extreme.png",
-  "fine_china.png",
-  "flashdance_what_a_feeling.png",
-  "follow_the_leader.png",
-  "gentleman_c1.png",
-  "gentleman_c2.png",
-  "gentleman_sweat.png",
-  "get_lucky_p1.png",
-  "get_lucky_p2.png",
-  "ghostbusters_p1.png",
-  "ghostbusters_p2.png",
-  "ghostbusters_p3.png",
-  "ghostbusters_p4.png",
-  "ghostbusters_sweat.png",
-  "gimme_gimme_gimme_a_man_after_midnight_on_stage.png",
-  "gimme_gimme_gimme_a_man_after_midnight.png",
-  "i_kissed_a_girl_sing_along.png",
-  "i_kissed_a_girl_sweat.png",
-  "i_kissed_a_girl.png",
-  "i_need_your_love.png",
-  "i_will_survive_on_stage.png",
-  "i_will_survive.png",
-  "in_the_summertime.png",
-  "isidora.png",
-  "its_you_sweat.png",
-  "its_you.png",
-  "just_a_gigolo_p1.png",
-  "just_a_gigolo_p2.png",
-  "just_dance_c1.png",
-  "just_dance_c2.png",
-  "just_dance_sing_along.png",
-  "just_dance_sweat.png",
-  "kiss_you_6player_p1.png",
-  "kiss_you_p2.png",
-  "kiss_you_p3.png",
-  "limbo_p1.png",
-  "limbo_p2.png",
-  "love_boat.png",
-  "maria.png",
-  "miss_understood.png",
-  "moskau_p1.png",
-  "my_main_girl.png",
-  "nitro_bot_p1.png",
-  "nitro_bot_p2.png",
-  "one_way_or_another_teenage_kicks.png",
-  "pound_the_alarm_extreme.png",
-  "pound_the_alarm_p3.png",
-  "prince_ali_p4.png",
-  "rich_girl.png",
-  "roar.png",
-  "rock_n_roll.png",
-  "safe_and_sound_c1.png",
-  "sexy_and_i_know_it.png",
-  "she_wolf_falling_to_pieces.png",
-  "starships_charleston_p1.png",
-  "starships.png",
-  "the_other_side.png",
-  "the_way_p2.png",
-  "the_world_is_ours.png",
-  "timber_p1.png",
-  "timber_p2.png",
-  "troublemaker.png",
-  "turn_up_the_love_p1.png",
-  "turn_up_the_love_sumo_p3.png",
-  "wake_me_up_c1.png",
-  "wake_me_up_c2.png",
-  "waking_up_in_vegas.png",
-  "we_cant_stop.png",
-  "what_about_love.png",
-  "where_have_you_been.png",
-  "wild.png",
-  "ymca_p1.png",
-  "ymca_p2.png",
-  "ymca_p3.png",
-  "ymca_p4.png"
-];
-
-const avatarDiv = document.getElementById("avatarSelection");
-let currentUserAvatar = null;
-
-avatars.forEach(name => {
-    const img = document.createElement("img");
-    img.src = `/Just dance avatars/${name}`;
-    img.style.width = "100px";
-    img.style.height = "100px";
-    img.style.margin = "10px";
-    img.style.cursor = "pointer";
-    img.style.borderRadius = "12px";
-    img.style.border = "2px solid transparent";
-    img.onclick = async () => {
-        if(currentUser){
-            await set(ref(db, `users/${currentUser.uid}/avatar`), name);
-            currentUserAvatar = name;
-        }
-        avatarDiv.style.display = "none";
-        showUserAvatar();
-    };
-    avatarDiv.appendChild(img);
-});
-
-function showUserAvatar(){
-    let avatarImg = document.getElementById("userAvatar");
-    if(!avatarImg){
-        avatarImg = document.createElement("img");
-        avatarImg.id = "userAvatar";
-        avatarImg.style.width = "80px";
-        avatarImg.style.height = "80px";
-        avatarImg.style.position = "fixed";
-        avatarImg.style.top = "20px";
-        avatarImg.style.right = "20px";
-        avatarImg.style.borderRadius = "12px";
-        document.body.appendChild(avatarImg);
-    }
-    if(currentUserAvatar) avatarImg.src = `/Just dance avatars/${currentUserAvatar}`;
-}
-
-function loadUserAvatar(){
-    if(!currentUser) return;
-    onValue(ref(db, `users/${currentUser.uid}/avatar`), snapshot=>{
-        currentUserAvatar = snapshot.val();
-        if(currentUserAvatar) avatarDiv.style.display="none";
-        showUserAvatar();
-    });
-}
 </script>
 </body>
 </html>
