@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
-/* Mantive todo seu CSS anterior */
 @font-face { font-family:'TungstenBold'; src:url('Tungsten-Bold.ttf') format('truetype'); }
 body{ font-family:Arial,sans-serif; background:url('IMG_2223.jpeg') no-repeat center center fixed; background-size:cover; color:#f0f0f0; margin:0; padding:0; }
 header{ font-family:'TungstenBold',Arial,sans-serif; font-weight:normal; background:rgba(255,77,77,0.3); padding:1.2em; text-align:center; font-size:2.2em; text-transform:uppercase; letter-spacing:1.5px; box-shadow:0 4px 6px rgba(0,0,0,0.3); border-radius:0 0 12px 12px; }
@@ -41,7 +40,7 @@ button:hover{ transform: scale(1.05); box-shadow:0 8px 20px rgba(255,187,51,0.6)
 
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
-<input type="url" id="avatarUrl" placeholder="Nome do avatar (ex: avatar1.png)" disabled>
+<input type="url" id="avatarUrl" placeholder="URL do seu avatar" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
@@ -139,17 +138,16 @@ onAuthStateChanged(auth, async user=>{
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
     const author = authorInput.value.trim();
-    const avatarName = avatarInput.value.trim();
-    const avatar = `https://raw.githubusercontent.com/raphamodelagem3d-lab/Login/main/${avatarName}`;
+    const avatar = avatarInput.value.trim();
     const video = videoInput.value.trim();
     const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
     if(!author){ alert("Digite seu nome!"); return; }
-    if(!avatarName){ alert("Digite o nome do avatar!"); return; }
+    if(!avatar){ alert("Digite a URL do avatar!"); return; }
     if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
 
-    // Salva nome/avatar no usuário se ainda não existir
+    // Salva nome/avatar no usuário
     await set(ref(db,"users/"+currentUser.uid), {name: author, avatar: avatar});
 
     const postRef = push(ref(db,"posts"));
@@ -159,20 +157,39 @@ postBtn.addEventListener("click", async ()=>{
 });
 
 // Carrega posts
-function loadPosts(){
+function loadPosts() {
     onValue(ref(db,"posts"),snapshot=>{
         postsContainer.innerHTML="";
         const data = snapshot.val();
         if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
+
+        Object.entries(data).reverse().forEach(([key, post]) => {
             const div=document.createElement("div");
             div.className="post";
             if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
-            div.innerHTML=`
-                <div class="author"><img src="${post.avatar}" alt="avatar">${post.author}:</div>
-                <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
-            `;
-            if(post.tags&&post.tags.length){
+
+            // Avatar com fallback
+            const avatarImg = document.createElement("img");
+            avatarImg.src = post.avatar || "https://via.placeholder.com/32";
+            avatarImg.alt = "avatar";
+            avatarImg.width = 32;
+            avatarImg.height = 32;
+            avatarImg.onerror = () => { avatarImg.src = "https://via.placeholder.com/32"; };
+
+            const authorDiv = document.createElement("div");
+            authorDiv.className = "author";
+            authorDiv.appendChild(avatarImg);
+            const authorText = document.createTextNode(` ${post.author}:`);
+            authorDiv.appendChild(authorText);
+
+            const videoDiv = document.createElement("div");
+            videoDiv.className = "video-container";
+            videoDiv.innerHTML = `<iframe src="${post.video}" allowfullscreen></iframe>`;
+
+            div.appendChild(authorDiv);
+            div.appendChild(videoDiv);
+
+            if(post.tags && post.tags.length){
                 const tagsContainer=document.createElement("div");
                 tagsContainer.style.marginTop="0.5em";
                 post.tags.forEach(tag=>{
@@ -183,6 +200,7 @@ function loadPosts(){
                 });
                 div.appendChild(tagsContainer);
             }
+
             if(currentUser && post.uid===currentUser.uid){
                 const delBtn=document.createElement("button");
                 delBtn.textContent="Excluir";
@@ -190,6 +208,7 @@ function loadPosts(){
                 delBtn.onclick=()=> remove(ref(db,"posts/"+key));
                 div.appendChild(delBtn);
             }
+
             postsContainer.appendChild(div);
         });
     });
