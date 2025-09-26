@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Autodance Share Online</title>
 <style>
+/* Fonte Tungsten Bold */
 @font-face { font-family:'TungstenBold'; src:url('Tungsten-Bold.ttf') format('truetype'); }
 body{ font-family:Arial,sans-serif; background:url('IMG_2223.jpeg') no-repeat center center fixed; background-size:cover; color:#f0f0f0; margin:0; padding:0; }
 header{ font-family:'TungstenBold',Arial,sans-serif; font-weight:normal; background:rgba(255,77,77,0.3); padding:1.2em; text-align:center; font-size:2.2em; text-transform:uppercase; letter-spacing:1.5px; box-shadow:0 4px 6px rgba(0,0,0,0.3); border-radius:0 0 12px 12px; }
@@ -27,7 +28,7 @@ button:hover{ transform: scale(1.05); box-shadow:0 8px 20px rgba(255,187,51,0.6)
 .post.own{ border:2px solid #ffbb33;}
 .tag-box{ font-family:'TungstenBold',Arial,sans-serif; display:inline-block; background:rgba(255,187,51,0.2); color:#ffbb33; padding:4px 10px; margin:3px 3px 0 0; border-radius:8px; font-size:0.85em;}
 #searchInput{ width:100%; padding:0.8em; margin-bottom:1em; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color:#fff;}
-#searchInput:focus{ outline:none; }
+#searchInput:focus{ outline:none;}
 </style>
 </head>
 <body>
@@ -40,7 +41,7 @@ button:hover{ transform: scale(1.05); box-shadow:0 8px 20px rgba(255,187,51,0.6)
 
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
-<input type="url" id="avatarUrl" placeholder="URL do seu avatar" disabled>
+<input type="text" id="avatarUrl" placeholder="Nome do avatar (ex: avatar1)" disabled>
 <input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
 <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
 <button id="postBtn" disabled>Postar</button>
@@ -84,8 +85,8 @@ const searchInput=document.getElementById("searchInput");
 
 let currentUser=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
-const fallbackAvatar = "https://raw.githubusercontent.com/raphamodelagem3d-lab/Login/main/default-avatar.png";
 
+// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
     const email=emailInput.value.trim();
     const senha=senhaInput.value.trim();
@@ -97,6 +98,7 @@ loginBtn.addEventListener("click", async ()=>{
     }
 });
 
+// Detecta login
 onAuthStateChanged(auth, async user=>{
     if(user){
         currentUser=user;
@@ -114,7 +116,7 @@ onAuthStateChanged(auth, async user=>{
         if(snapshot.exists()){
             const val = snapshot.val();
             if(val.name) authorInput.value = val.name;
-            if(val.avatar) avatarInput.value = val.avatar;
+            if(val.avatar) avatarInput.value = val.avatar.split("/").pop().replace(".png",""); // mostra só o nome do avatar
         }
 
         loadPosts();
@@ -132,17 +134,20 @@ onAuthStateChanged(auth, async user=>{
     }
 });
 
+// Adiciona post
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
     const author = authorInput.value.trim();
-    const avatar = avatarInput.value.trim();
+    const avatarName = avatarInput.value.trim();
     const video = videoInput.value.trim();
     const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
     if(!author){ alert("Digite seu nome!"); return; }
-    if(!avatar){ alert("Digite a URL do avatar!"); return; }
+    if(!avatarName){ alert("Digite o nome do avatar!"); return; }
     if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
+
+    const avatar = `https://raphamodelagem3d-lab.github.io/Login/${avatarName}.png`;
 
     await set(ref(db,"users/"+currentUser.uid), {name: author, avatar: avatar});
 
@@ -152,6 +157,7 @@ postBtn.addEventListener("click", async ()=>{
     videoInput.value=""; tagsInput.value="";
 });
 
+// Carrega posts
 function loadPosts(){
     onValue(ref(db,"posts"),snapshot=>{
         postsContainer.innerHTML="";
@@ -161,9 +167,8 @@ function loadPosts(){
             const div=document.createElement("div");
             div.className="post";
             if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
-            const avatarSrc = post.avatar ? post.avatar : fallbackAvatar;
             div.innerHTML=`
-                <div class="author"><img src="${avatarSrc}" alt="avatar" onerror="this.src='${fallbackAvatar}'">${post.author}:</div>
+                <div class="author"><img src="${post.avatar}" alt="avatar">${post.author}:</div>
                 <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
             `;
             if(post.tags&&post.tags.length){
@@ -189,6 +194,7 @@ function loadPosts(){
     });
 }
 
+// Filtrar pesquisa
 searchInput.addEventListener("input", ()=>{
     const filter=searchInput.value.trim().toLowerCase();
     const posts=postsContainer.querySelectorAll(".post");
