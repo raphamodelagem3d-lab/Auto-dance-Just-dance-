@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autodance Share Online</title>
+<title>AUTODANCE SHARE ONLINE</title>
 <style>
 @font-face { font-family:'TungstenBold'; src:url('Tungsten-Bold.ttf') format('truetype'); }
 
@@ -29,7 +29,7 @@ header {
 
 header h1 { 
     margin:0; 
-    font-size:2.2em; 
+    font-size:2.2em;
     letter-spacing:2px;
 }
 
@@ -102,7 +102,7 @@ button:hover {
     box-shadow: -4px 0 12px rgba(0,0,0,0.5);
     transition: right 0.3s;
     z-index: 1001;
-    font-family:'TungstenBold',Arial,sans-serif;
+    font-family:'TungstenBold', Arial, sans-serif;
 }
 #menuContent.show { right:0; }
 
@@ -119,9 +119,6 @@ button:hover {
 
 .menu-btn { display:block; margin-top:1em; background:#ffbb33; color:#000; width:100%; border-radius:8px; padding:0.6em; text-align:center; cursor:pointer;}
 .menu-btn:hover { background:#ffdd66; }
-
-#menuName { font-size:1.1em; }
-#menuHeader { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
 </style>
 </head>
 <body>
@@ -134,18 +131,11 @@ button:hover {
 
 <div id="menuContent">
     <h2>Perfil</h2>
-    <div id="menuHeader">
-        <img id="menuAvatar" src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-        <div id="menuName"></div>
-    </div>
-    <div>
+    <div id="menuAvatar"><img src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;"></div>
+    <span id="menuName" style="margin-left:10px; font-size:1.1em;"></span>
+    <div style="margin-top:1em;">
         <h3>Alterar Avatar</h3>
         <div id="avatarListMenu"></div>
-    </div>
-    <div>
-        <h3>Alterar Nome</h3>
-        <input type="text" id="nameInput" placeholder="Seu nome">
-        <button class="menu-btn" id="updateNameBtn">Atualizar Nome</button>
     </div>
     <button class="menu-btn" id="logoutBtn">Logout</button>
 </div>
@@ -191,6 +181,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+// Elementos
 const emailInput=document.getElementById("email");
 const senhaInput=document.getElementById("senha");
 const loginBtn=document.getElementById("loginBtn");
@@ -202,35 +193,40 @@ const postsContainer=document.getElementById("posts");
 const searchInput=document.getElementById("searchInput");
 const avatarList=document.getElementById("avatarList");
 const avatarListMenu=document.getElementById("avatarListMenu");
-const menuAvatar=document.getElementById("menuAvatar");
+const menuAvatar=document.querySelector("#menuAvatar img");
 const menuName=document.getElementById("menuName");
 const logoutBtn=document.getElementById("logoutBtn");
 const hamburger=document.getElementById("hamburger");
 const menuContent=document.getElementById("menuContent");
 const menuOverlay=document.getElementById("menuOverlay");
-const nameInput=document.getElementById("nameInput");
-const updateNameBtn=document.getElementById("updateNameBtn");
 
 let currentUser=null;
 let selectedAvatar=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
+// Monta seleção de avatar na tela principal e menu
 function buildAvatarList(listEl){
     listEl.innerHTML="";
     const img=document.createElement("img");
     img.src="https://raphamodelagem3d-lab.github.io/Login/";
-    img.onclick=()=>{
+    img.onclick=async ()=>{
         selectedAvatar=img.src;
         menuAvatar.src=img.src;
-        if(currentUser) update(ref(db,"users/"+currentUser.uid), {avatar:selectedAvatar});
-        loadPosts();
+
+        if(currentUser){
+            await update(ref(db,"users/"+currentUser.uid), {avatar:selectedAvatar});
+            loadPosts(); // Atualiza avatar nos posts
+        }
+
+        // Redireciona
+        window.location.href="https://raphamodelagem3d-lab.github.io/Login/";
     };
     listEl.appendChild(img);
 }
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
 
-// Login
+// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
     const email=emailInput.value.trim();
     const senha=senhaInput.value.trim();
@@ -246,55 +242,68 @@ loginBtn.addEventListener("click", async ()=>{
 onAuthStateChanged(auth, async user=>{
     if(user){
         currentUser=user;
-        emailInput.disabled=true; senhaInput.disabled=true; loginBtn.disabled=true;
-        authorInput.disabled=false; videoInput.disabled=false; tagsInput.disabled=false; postBtn.disabled=false;
+        emailInput.disabled=true;
+        senhaInput.disabled=true;
+        loginBtn.disabled=true;
+        authorInput.disabled=false;
+        videoInput.disabled=false;
+        tagsInput.disabled=false;
+        postBtn.disabled=false;
 
         const userRef=ref(db,"users/"+user.uid);
         const snapshot=await get(userRef);
         if(snapshot.exists()){
             const val=snapshot.val();
-            if(val.name) { authorInput.value=val.name; nameInput.value=val.name; menuName.textContent=val.name; }
+            if(val.name) { 
+                authorInput.value=val.name;
+                menuName.textContent=val.name;
+            }
             if(val.avatar) { selectedAvatar=val.avatar; menuAvatar.src=val.avatar; }
         }
 
         loadPosts();
     } else {
         currentUser=null;
-        emailInput.disabled=false; senhaInput.disabled=false; loginBtn.disabled=false;
-        authorInput.disabled=true; videoInput.disabled=true; tagsInput.disabled=true; postBtn.disabled=true;
-        postsContainer.innerHTML=""; menuAvatar.src=""; menuName.textContent="";
+        emailInput.disabled=false;
+        senhaInput.disabled=false;
+        loginBtn.disabled=false;
+        authorInput.disabled=true;
+        videoInput.disabled=true;
+        tagsInput.disabled=true;
+        postBtn.disabled=true;
+        postsContainer.innerHTML="";
+        menuAvatar.src="";
+        menuName.textContent="";
     }
 });
 
-// Post
+// Adiciona post
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
     const author=authorInput.value.trim();
     const video=videoInput.value.trim();
     const tags=tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
-    if(!author){ alert("Digite seu nome!"); return; }
+    const userSnap = await get(ref(db,"users/"+currentUser.uid));
+    let accountName = author;
+    if(userSnap.exists()) accountName = userSnap.val().name;
+
+    if(author!==accountName){
+        alert("Você só pode postar com o nome cadastrado na sua conta!");
+        authorInput.value = accountName;
+        return;
+    }
+
     if(!selectedAvatar){ alert("Selecione um avatar!"); return; }
-    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
     if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
+    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
 
-    await set(ref(db,"users/"+currentUser.uid),{name:author,avatar:selectedAvatar});
+    await set(ref(db,"users/"+currentUser.uid), {name:accountName, avatar:selectedAvatar});
 
-    const postRef=push(ref(db,"posts"));
-    await set(postRef,{author,avatar:selectedAvatar,video,tags,uid:currentUser.uid});
+    const postRef = push(ref(db,"posts"));
+    await set(postRef,{author:accountName, avatar:selectedAvatar, video, tags, uid:currentUser.uid});
 
     videoInput.value=""; tagsInput.value="";
-});
-
-// Atualizar nome
-updateNameBtn.addEventListener("click", async ()=>{
-    if(!currentUser) return;
-    const newName=nameInput.value.trim();
-    if(!newName){ alert("Digite um nome válido"); return; }
-    authorInput.value=newName;
-    menuName.textContent=newName;
-    await update(ref(db,"users/"+currentUser.uid), {name:newName});
-    loadPosts();
 });
 
 // Carrega posts
@@ -344,7 +353,7 @@ searchInput.addEventListener("input", ()=>{
     });
 });
 
-// Hamburger
+// Hamburger menu
 hamburger.addEventListener("click", ()=>{
     menuContent.classList.toggle("show");
     menuOverlay.classList.toggle("show");
