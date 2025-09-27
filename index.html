@@ -102,7 +102,6 @@ button:hover {
     box-shadow: -4px 0 12px rgba(0,0,0,0.5);
     transition: right 0.3s;
     z-index: 1001;
-    font-family:'TungstenBold', Arial, sans-serif;
 }
 #menuContent.show { right:0; }
 
@@ -131,9 +130,11 @@ button:hover {
 
 <div id="menuContent">
     <h2>Perfil</h2>
-    <div id="menuAvatar"><img src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;"></div>
-    <span id="menuName" style="margin-left:10px; font-size:1.1em;"></span>
-    <div style="margin-top:1em;">
+    <div id="menuAvatar" style="display:flex; align-items:center; gap:10px;">
+      <img src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+      <span id="menuAvatarName" style="font-family:'TungstenBold',Arial,sans-serif; color:#ffbb33;"></span>
+    </div>
+    <div>
         <h3>Alterar Avatar</h3>
         <div id="avatarListMenu"></div>
     </div>
@@ -194,7 +195,7 @@ const searchInput=document.getElementById("searchInput");
 const avatarList=document.getElementById("avatarList");
 const avatarListMenu=document.getElementById("avatarListMenu");
 const menuAvatar=document.querySelector("#menuAvatar img");
-const menuName=document.getElementById("menuName");
+const menuAvatarName=document.getElementById("menuAvatarName");
 const logoutBtn=document.getElementById("logoutBtn");
 const hamburger=document.getElementById("hamburger");
 const menuContent=document.getElementById("menuContent");
@@ -209,22 +210,20 @@ function buildAvatarList(listEl){
     listEl.innerHTML="";
     const img=document.createElement("img");
     img.src="https://raphamodelagem3d-lab.github.io/Login/";
-    img.onclick=async ()=>{
-        selectedAvatar=img.src;
-        menuAvatar.src=img.src;
-
-        if(currentUser){
-            await update(ref(db,"users/"+currentUser.uid), {avatar:selectedAvatar});
-            loadPosts(); // Atualiza avatar nos posts
-        }
-
-        // Redireciona
-        window.location.href="https://raphamodelagem3d-lab.github.io/Login/";
-    };
+    img.onclick=()=> updateUserAvatar(img.src);
     listEl.appendChild(img);
 }
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
+
+// Atualiza avatar
+function updateUserAvatar(url){
+    selectedAvatar=url;
+    if(currentUser) update(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
+    menuAvatar.src=selectedAvatar;
+    const posts=postsContainer.querySelectorAll(".post.own .author img");
+    posts.forEach(img=>img.src=selectedAvatar);
+}
 
 // Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
@@ -252,14 +251,20 @@ onAuthStateChanged(auth, async user=>{
 
         const userRef=ref(db,"users/"+user.uid);
         const snapshot=await get(userRef);
+        let storedName="";
         if(snapshot.exists()){
             const val=snapshot.val();
-            if(val.name) { 
-                authorInput.value=val.name;
-                menuName.textContent=val.name;
+            if(val.name){
+                storedName=val.name;
+                authorInput.value=storedName;
+                authorInput.disabled = true; // trava definitivamente
             }
-            if(val.avatar) { selectedAvatar=val.avatar; menuAvatar.src=val.avatar; }
+            if(val.avatar){
+                selectedAvatar=val.avatar;
+                menuAvatar.src=selectedAvatar;
+            }
         }
+        menuAvatarName.textContent=storedName;
 
         loadPosts();
     } else {
@@ -273,37 +278,43 @@ onAuthStateChanged(auth, async user=>{
         postBtn.disabled=true;
         postsContainer.innerHTML="";
         menuAvatar.src="";
-        menuName.textContent="";
+        menuAvatarName.textContent="";
     }
 });
 
 // Adiciona post
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
-    const author=authorInput.value.trim();
-    const video=videoInput.value.trim();
-    const tags=tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
-    const userSnap = await get(ref(db,"users/"+currentUser.uid));
-    let accountName = author;
-    if(userSnap.exists()) accountName = userSnap.val().name;
+    const userRef = ref(db,"users/"+currentUser.uid);
+    const snapshot = await get(userRef);
+    let storedName = "";
+    if(snapshot.exists()) storedName = snapshot.val().name || "";
 
-    if(author!==accountName){
-        alert("Você só pode postar com o nome cadastrado na sua conta!");
-        authorInput.value = accountName;
-        return;
+    let author = storedName;
+    if(!author){
+        author = authorInput.value.trim();
+        if(!author){ alert("Digite seu nome!"); return; }
+        await update(userRef,{name:author});
+        authorInput.value = author;
+        authorInput.disabled = true;
+        menuAvatarName.textContent = author;
+    } else {
+        authorInput.value = author; // força usar nome cadastrado
     }
+
+    const video = videoInput.value.trim();
+    const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
     if(!selectedAvatar){ alert("Selecione um avatar!"); return; }
     if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
     if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
 
-    await set(ref(db,"users/"+currentUser.uid), {name:accountName, avatar:selectedAvatar});
-
     const postRef = push(ref(db,"posts"));
-    await set(postRef,{author:accountName, avatar:selectedAvatar, video, tags, uid:currentUser.uid});
+    await set(postRef,{author,avatar:selectedAvatar,video,tags,uid:currentUser.uid});
 
-    videoInput.value=""; tagsInput.value="";
+    videoInput.value = "";
+    tagsInput.value = "";
 });
 
 // Carrega posts
