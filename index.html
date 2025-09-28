@@ -112,14 +112,7 @@ button:hover {
   text-shadow: 0 0 8px rgba(255, 187, 51, 0.7);
 }
 
-/* Likes */
-.likeSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  margin-top: 0.5em;
-}
+/* Likes e views */
 .likeBtn {
   display: flex;
   align-items: center;
@@ -137,10 +130,7 @@ button:hover {
 .likeBtn i { font-size: 1.2em; transition: color 0.3s; }
 .likeBtn:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,87,34,0.6); }
 .likeBtn.liked { background: linear-gradient(135deg, #ff1744, #ff5252); }
-.likeCount { font-size: 0.9em; color: #eee; font-weight: 600; }
-
-/* Views */
-.viewsCount { font-size: 0.85em; color: #ffbb33; margin-top: 4px; display:block; }
+.likeCount, .viewsCount { font-size: 0.9em; color: #eee; font-weight: 600; }
 
 /* Menu lateral */
 #menuContent {
@@ -232,6 +222,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+// Elementos
 const emailInput=document.getElementById("email");
 const senhaInput=document.getElementById("senha");
 const loginBtn=document.getElementById("loginBtn");
@@ -254,6 +245,7 @@ let currentUser=null;
 let selectedAvatar=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
+// Monta seleção de avatar
 function buildAvatarList(listEl){
     listEl.innerHTML="";
     const img=document.createElement("img");
@@ -264,6 +256,7 @@ function buildAvatarList(listEl){
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
 
+// Atualiza avatar
 function updateUserAvatar(url){
     selectedAvatar=url;
     if(currentUser) set(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
@@ -272,6 +265,7 @@ function updateUserAvatar(url){
     posts.forEach(img=>img.src=selectedAvatar);
 }
 
+// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
     const email=emailInput.value.trim();
     const senha=senhaInput.value.trim();
@@ -283,6 +277,7 @@ loginBtn.addEventListener("click", async ()=>{
     }
 });
 
+// Detecta login
 onAuthStateChanged(auth, async user=>{
     if(user){
         currentUser=user;
@@ -326,6 +321,7 @@ onAuthStateChanged(auth, async user=>{
     }
 });
 
+// Adiciona post
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
 
@@ -358,29 +354,43 @@ postBtn.addEventListener("click", async ()=>{
     tagsInput.value = "";
 });
 
-function addLikeFeature(postDiv, postId) {
-    const likeSection = document.createElement("div");
-    likeSection.className = "likeSection";
+// Likes e views
+function addLikeAndViewFeature(postDiv, postId) {
+    const featureSection = document.createElement("div");
+    featureSection.style.display = "flex";
+    featureSection.style.alignItems = "center";
+    featureSection.style.gap = "16px";
+    featureSection.style.marginTop = "0.5em";
 
+    // Likes
     const likeBtn = document.createElement("button");
     likeBtn.className = "likeBtn";
     likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up"></i> <span class="likeText">Curtir</span>`;
-
     const likeCount = document.createElement("span");
     likeCount.className = "likeCount";
     likeCount.textContent = "0 likes";
+    featureSection.appendChild(likeBtn);
+    featureSection.appendChild(likeCount);
 
-    likeSection.appendChild(likeBtn);
-    likeSection.appendChild(likeCount);
-    postDiv.appendChild(likeSection);
+    // Views
+    const viewsEl = document.createElement("span");
+    viewsEl.className = "viewsCount";
+    viewsEl.style.fontSize = "0.9em";
+    viewsEl.style.color = "#eee";
+    viewsEl.style.fontWeight = "600";
+    viewsEl.textContent = "0 views";
+    featureSection.appendChild(viewsEl);
+
+    postDiv.appendChild(featureSection);
 
     const userLikeRef = ref(db, `likes/${postId}/users/${currentUser.uid}`);
     const countRef = ref(db, `likes/${postId}/count`);
+    const viewRef = ref(db, `views/${postId}`);
 
+    // Likes
     onValue(countRef, snapshot => {
         likeCount.textContent = snapshot.exists() ? snapshot.val() + " likes" : "0 likes";
     });
-
     onValue(userLikeRef, snapshot => {
         if(snapshot.exists() && snapshot.val() === true){
             likeBtn.classList.add("liked");
@@ -406,76 +416,60 @@ function addLikeFeature(postDiv, postId) {
             await set(countRef, currentCount+1);
         }
     });
+
+    // Views
+    const viewedPosts = JSON.parse(localStorage.getItem("viewedPosts") || "[]");
+    get(viewRef).then(snap => {
+        let current = snap.exists() ? snap.val() : 0;
+        if(!viewedPosts.includes(postId)){
+            current += 1;
+            set(viewRef, current);
+            viewedPosts.push(postId);
+            localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
+        }
+        viewsEl.textContent = current + " views";
+    });
 }
 
-// Views Streamable
-async function fetchStreamableViews(videoUrl, viewElement) {
-    try {
-        const videoID = videoUrl.split("/").pop();
-        const videoPage = await fetch(`https://corsproxy.io/?https://streamable.com/${videoID}`);
-        const htmlText = await videoPage.text();
-        const viewsMatch = htmlText.match(/"views":(\d+)/);
-        const views = viewsMatch ? parseInt(viewsMatch[1], 10) : 0;
-        viewElement.textContent = `${views} views`;
-    } catch (error) {
-        console.error('Erro ao buscar views do Streamable:', error);
-        viewElement.textContent = 'Views indisponíveis';
-    }
-}
-
-function loadPosts() {
-    onValue(ref(db,"posts"), snapshot => {
-        postsContainer.innerHTML = "";
-        const data = snapshot.val();
+// Carrega posts
+function loadPosts(){
+    onValue(ref(db,"posts"),snapshot=>{
+        postsContainer.innerHTML="";
+        const data=snapshot.val();
         if(!data) return;
-
-        Object.entries(data).reverse().forEach(([key, post]) => {
-            const div = document.createElement("div");
-            div.className = "post";
-            if(currentUser && post.uid === currentUser.uid) div.classList.add("own");
-
-            div.innerHTML = `
+        Object.entries(data).reverse().forEach(([key,post])=>{
+            const div=document.createElement("div");
+            div.className="post";
+            if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
+            div.innerHTML=`
                 <div class="author"><img src="${post.avatar}">${post.author}:</div>
                 <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
             `;
-
-            // Tags
-            if(post.tags && post.tags.length) {
-                const tagsContainer = document.createElement("div");
-                tagsContainer.style.marginTop = "0.5em";
-                post.tags.forEach(tag => {
-                    const tagBox = document.createElement("span");
-                    tagBox.className = "tag-box";
-                    tagBox.textContent = tag;
+            if(post.tags&&post.tags.length){
+                const tagsContainer=document.createElement("div");
+                tagsContainer.style.marginTop="0.5em";
+                post.tags.forEach(tag=>{
+                    const tagBox=document.createElement("span");
+                    tagBox.className="tag-box";
+                    tagBox.textContent=tag;
                     tagsContainer.appendChild(tagBox);
                 });
                 div.appendChild(tagsContainer);
             }
-
-            // Excluir
-            if(currentUser && post.uid === currentUser.uid){
-                const delBtn = document.createElement("button");
-                delBtn.textContent = "Excluir";
-                delBtn.className = "delete-btn";
-                delBtn.onclick = () => remove(ref(db,"posts/"+key));
+            if(currentUser && post.uid===currentUser.uid){
+                const delBtn=document.createElement("button");
+                delBtn.textContent="Excluir";
+                delBtn.className="delete-btn";
+                delBtn.onclick=()=> remove(ref(db,"posts/"+key));
                 div.appendChild(delBtn);
             }
-
-            // Likes
-            if(currentUser) addLikeFeature(div, key);
-
-            // Views
-            const viewsEl = document.createElement("span");
-            viewsEl.className = "viewsCount";
-            div.appendChild(viewsEl);
-            fetchStreamableViews(post.video, viewsEl);
-
+            if(currentUser) addLikeAndViewFeature(div,key);
             postsContainer.appendChild(div);
         });
     });
 }
 
-// Filtrar pesquisa
+// Pesquisar
 searchInput.addEventListener("input", ()=>{
     const filter=searchInput.value.trim().toLowerCase();
     const posts=postsContainer.querySelectorAll(".post");
@@ -485,7 +479,7 @@ searchInput.addEventListener("input", ()=>{
     });
 });
 
-// Hamburger menu
+// Hamburger
 hamburger.addEventListener("click", ()=>{
     menuContent.classList.toggle("show");
     menuOverlay.classList.toggle("show");
