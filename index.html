@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AUTODANCE SHARE ONLINE</title>
 <style>
-@font-face { font-family:'TungstenBold'; src:url('Tungsten-Bold.ttf') format('truetype'); }
+@font-face { font-family:'JustDance'; src:url('Just Dance Font Regular.ttf') format('truetype'); }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'JustDance', Arial, sans-serif;
     background: url('IMG_2223.jpeg') no-repeat center center fixed;
     background-size: cover;
     margin:0; padding:0;
@@ -17,7 +17,7 @@ body {
 }
 
 header {
-    font-family:'TungstenBold', Arial,sans-serif;
+    font-family:'JustDance', Arial,sans-serif;
     font-weight: normal;
     background: rgba(255,77,77,0.3);
     padding: 1em 1.5em;
@@ -86,11 +86,58 @@ button:hover {
 .delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s;}
 .delete-btn:hover { background:#e04343; transform: scale(1.05);}
 .post.own { border:2px solid #ffbb33;}
-.tag-box { font-family:'TungstenBold',Arial,sans-serif; display:inline-block; background:rgba(255,187,51,0.2); color:#ffbb33; padding:4px 10px; margin:3px 3px 0 0; border-radius:8px; font-size:0.85em; cursor:pointer; }
+.tag-box { font-family:'JustDance',Arial,sans-serif; display:inline-block; background:rgba(255,187,51,0.2); color:#ffbb33; padding:4px 10px; margin:3px 3px 0 0; border-radius:8px; font-size:0.85em; cursor:pointer; }
 
-#avatarList { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:1em; }
-#avatarList img { width:50px; height:50px; border-radius:50%; object-fit:cover; cursor:pointer; border:2px solid transparent; transition:border 0.2s;}
-#avatarList img.selected { border-color:#ffbb33; }
+/* Avatar e menu */
+#menuAvatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 1em 0;
+}
+#menuAvatar img {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 3px solid #ffbb33;
+  object-fit: cover;
+  box-shadow: 0 0 15px rgba(255, 187, 51, 0.6);
+}
+#menuAvatarName {
+  font-family: 'JustDance', Arial, sans-serif;
+  font-size: 1.6em;
+  font-weight: bold;
+  color: #ffbb33;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(255, 187, 51, 0.7);
+}
+
+/* Likes */
+.likeSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.5em;
+}
+.likeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ff5722, #ff9800);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.likeBtn i { font-size: 1.2em; transition: color 0.3s; }
+.likeBtn:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,87,34,0.6); }
+.likeBtn.liked { background: linear-gradient(135deg, #ff1744, #ff5252); }
+.likeCount { font-size: 0.9em; color: #eee; font-weight: 600; }
 
 /* Menu lateral */
 #menuContent {
@@ -119,6 +166,7 @@ button:hover {
 .menu-btn { display:block; margin-top:1em; background:#ffbb33; color:#000; width:100%; border-radius:8px; padding:0.6em; text-align:center; cursor:pointer;}
 .menu-btn:hover { background:#ffdd66; }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
 <header>
@@ -130,9 +178,9 @@ button:hover {
 
 <div id="menuContent">
     <h2>Perfil</h2>
-    <div id="menuAvatar" style="display:flex; align-items:center; gap:10px;">
-      <img src="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-      <span id="menuAvatarName" style="font-family:'TungstenBold',Arial,sans-serif; color:#ffbb33;"></span>
+    <div id="menuAvatar">
+      <img src="">
+      <span id="menuAvatarName"></span>
     </div>
     <div>
         <h3>Alterar Avatar</h3>
@@ -166,7 +214,7 @@ button:hover {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getDatabase, ref, push, set, onValue, remove, get, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, push, set, onValue, get, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
@@ -177,7 +225,6 @@ const firebaseConfig = {
   messagingSenderId: "960760470726",
   appId: "1:960760470726:web:f5af55d01df6a2be0d4bc7"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
@@ -205,7 +252,7 @@ let currentUser=null;
 let selectedAvatar=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-// Monta seleção de avatar na tela principal e menu
+// Monta seleção de avatar
 function buildAvatarList(listEl){
     listEl.innerHTML="";
     const img=document.createElement("img");
@@ -219,7 +266,7 @@ buildAvatarList(avatarListMenu);
 // Atualiza avatar
 function updateUserAvatar(url){
     selectedAvatar=url;
-    if(currentUser) update(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
+    if(currentUser) set(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
     menuAvatar.src=selectedAvatar;
     const posts=postsContainer.querySelectorAll(".post.own .author img");
     posts.forEach(img=>img.src=selectedAvatar);
@@ -257,7 +304,7 @@ onAuthStateChanged(auth, async user=>{
             if(val.name){
                 storedName=val.name;
                 authorInput.value=storedName;
-                authorInput.disabled = true; // trava definitivamente
+                authorInput.disabled = true;
             }
             if(val.avatar){
                 selectedAvatar=val.avatar;
@@ -265,7 +312,6 @@ onAuthStateChanged(auth, async user=>{
             }
         }
         menuAvatarName.textContent=storedName;
-
         loadPosts();
     } else {
         currentUser=null;
@@ -295,12 +341,10 @@ postBtn.addEventListener("click", async ()=>{
     if(!author){
         author = authorInput.value.trim();
         if(!author){ alert("Digite seu nome!"); return; }
-        await update(userRef,{name:author});
+        await set(userRef,{name:author, avatar:selectedAvatar});
         authorInput.value = author;
         authorInput.disabled = true;
         menuAvatarName.textContent = author;
-    } else {
-        authorInput.value = author; // força usar nome cadastrado
     }
 
     const video = videoInput.value.trim();
@@ -316,6 +360,57 @@ postBtn.addEventListener("click", async ()=>{
     videoInput.value = "";
     tagsInput.value = "";
 });
+
+// Likes
+function addLikeFeature(postDiv, postId) {
+    const likeSection = document.createElement("div");
+    likeSection.className = "likeSection";
+
+    const likeBtn = document.createElement("button");
+    likeBtn.className = "likeBtn";
+    likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up"></i> <span class="likeText">Curtir</span>`;
+
+    const likeCount = document.createElement("span");
+    likeCount.className = "likeCount";
+    likeCount.textContent = "0 likes";
+
+    likeSection.appendChild(likeBtn);
+    likeSection.appendChild(likeCount);
+    postDiv.appendChild(likeSection);
+
+    const userLikeRef = ref(db, `likes/${postId}/users/${currentUser.uid}`);
+    const countRef = ref(db, `likes/${postId}/count`);
+
+    onValue(countRef, snapshot => {
+        likeCount.textContent = snapshot.exists() ? snapshot.val() + " likes" : "0 likes";
+    });
+
+    onValue(userLikeRef, snapshot => {
+        if(snapshot.exists() && snapshot.val() === true){
+            likeBtn.classList.add("liked");
+            likeBtn.querySelector("i").classList.replace("fa-regular","fa-solid");
+            likeBtn.querySelector(".likeText").textContent = "Curtido";
+        } else {
+            likeBtn.classList.remove("liked");
+            likeBtn.querySelector("i").classList.replace("fa-solid","fa-regular");
+            likeBtn.querySelector(".likeText").textContent = "Curtir";
+        }
+    });
+
+    likeBtn.addEventListener("click", async () => {
+        const alreadyLiked = likeBtn.classList.contains("liked");
+        const countSnap = await get(countRef);
+        let currentCount = countSnap.exists() ? countSnap.val() : 0;
+
+        if(alreadyLiked){
+            await set(userLikeRef, false);
+            await set(countRef, Math.max(currentCount-1,0));
+        } else {
+            await set(userLikeRef, true);
+            await set(countRef, currentCount+1);
+        }
+    });
+}
 
 // Carrega posts
 function loadPosts(){
@@ -349,6 +444,7 @@ function loadPosts(){
                 delBtn.onclick=()=> remove(ref(db,"posts/"+key));
                 div.appendChild(delBtn);
             }
+            if(currentUser) addLikeFeature(div,key);
             postsContainer.appendChild(div);
         });
     });
