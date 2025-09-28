@@ -139,6 +139,9 @@ button:hover {
 .likeBtn.liked { background: linear-gradient(135deg, #ff1744, #ff5252); }
 .likeCount { font-size: 0.9em; color: #eee; font-weight: 600; }
 
+/* Views */
+.viewsCount { font-size: 0.85em; color: #ffbb33; margin-top: 4px; display:block; }
+
 /* Menu lateral */
 #menuContent {
     position: fixed; top:0; right:-300px;
@@ -229,7 +232,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Elementos
 const emailInput=document.getElementById("email");
 const senhaInput=document.getElementById("senha");
 const loginBtn=document.getElementById("loginBtn");
@@ -252,7 +254,6 @@ let currentUser=null;
 let selectedAvatar=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-// Monta seleção de avatar
 function buildAvatarList(listEl){
     listEl.innerHTML="";
     const img=document.createElement("img");
@@ -263,7 +264,6 @@ function buildAvatarList(listEl){
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
 
-// Atualiza avatar
 function updateUserAvatar(url){
     selectedAvatar=url;
     if(currentUser) set(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
@@ -272,7 +272,6 @@ function updateUserAvatar(url){
     posts.forEach(img=>img.src=selectedAvatar);
 }
 
-// Login / criar conta
 loginBtn.addEventListener("click", async ()=>{
     const email=emailInput.value.trim();
     const senha=senhaInput.value.trim();
@@ -284,7 +283,6 @@ loginBtn.addEventListener("click", async ()=>{
     }
 });
 
-// Detecta login
 onAuthStateChanged(auth, async user=>{
     if(user){
         currentUser=user;
@@ -328,7 +326,6 @@ onAuthStateChanged(auth, async user=>{
     }
 });
 
-// Adiciona post
 postBtn.addEventListener("click", async ()=>{
     if(!currentUser) return;
 
@@ -361,7 +358,6 @@ postBtn.addEventListener("click", async ()=>{
     tagsInput.value = "";
 });
 
-// Likes
 function addLikeFeature(postDiv, postId) {
     const likeSection = document.createElement("div");
     likeSection.className = "likeSection";
@@ -412,39 +408,68 @@ function addLikeFeature(postDiv, postId) {
     });
 }
 
-// Carrega posts
-function loadPosts(){
-    onValue(ref(db,"posts"),snapshot=>{
-        postsContainer.innerHTML="";
-        const data=snapshot.val();
+// Views Streamable
+async function fetchStreamableViews(videoUrl, viewElement) {
+    try {
+        const videoID = videoUrl.split("/").pop();
+        const videoPage = await fetch(`https://corsproxy.io/?https://streamable.com/${videoID}`);
+        const htmlText = await videoPage.text();
+        const viewsMatch = htmlText.match(/"views":(\d+)/);
+        const views = viewsMatch ? parseInt(viewsMatch[1], 10) : 0;
+        viewElement.textContent = `${views} views`;
+    } catch (error) {
+        console.error('Erro ao buscar views do Streamable:', error);
+        viewElement.textContent = 'Views indisponíveis';
+    }
+}
+
+function loadPosts() {
+    onValue(ref(db,"posts"), snapshot => {
+        postsContainer.innerHTML = "";
+        const data = snapshot.val();
         if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
-            const div=document.createElement("div");
-            div.className="post";
-            if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
-            div.innerHTML=`
+
+        Object.entries(data).reverse().forEach(([key, post]) => {
+            const div = document.createElement("div");
+            div.className = "post";
+            if(currentUser && post.uid === currentUser.uid) div.classList.add("own");
+
+            div.innerHTML = `
                 <div class="author"><img src="${post.avatar}">${post.author}:</div>
                 <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
             `;
-            if(post.tags&&post.tags.length){
-                const tagsContainer=document.createElement("div");
-                tagsContainer.style.marginTop="0.5em";
-                post.tags.forEach(tag=>{
-                    const tagBox=document.createElement("span");
-                    tagBox.className="tag-box";
-                    tagBox.textContent=tag;
+
+            // Tags
+            if(post.tags && post.tags.length) {
+                const tagsContainer = document.createElement("div");
+                tagsContainer.style.marginTop = "0.5em";
+                post.tags.forEach(tag => {
+                    const tagBox = document.createElement("span");
+                    tagBox.className = "tag-box";
+                    tagBox.textContent = tag;
                     tagsContainer.appendChild(tagBox);
                 });
                 div.appendChild(tagsContainer);
             }
-            if(currentUser && post.uid===currentUser.uid){
-                const delBtn=document.createElement("button");
-                delBtn.textContent="Excluir";
-                delBtn.className="delete-btn";
-                delBtn.onclick=()=> remove(ref(db,"posts/"+key));
+
+            // Excluir
+            if(currentUser && post.uid === currentUser.uid){
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "Excluir";
+                delBtn.className = "delete-btn";
+                delBtn.onclick = () => remove(ref(db,"posts/"+key));
                 div.appendChild(delBtn);
             }
-            if(currentUser) addLikeFeature(div,key);
+
+            // Likes
+            if(currentUser) addLikeFeature(div, key);
+
+            // Views
+            const viewsEl = document.createElement("span");
+            viewsEl.className = "viewsCount";
+            div.appendChild(viewsEl);
+            fetchStreamableViews(post.video, viewsEl);
+
             postsContainer.appendChild(div);
         });
     });
