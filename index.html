@@ -1,179 +1,222 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AUTODANCE SHARE ONLINE</title>
-
-<!-- ==========================
-     STYLES (mantive sua estética)
-     ========================== -->
 <style>
 @font-face { font-family:'JustDance'; src:url('Just Dance Font Regular.ttf') format('truetype'); }
 
-:root{
-  --accent:#ffbb33;
-  --accent-2:#ff4d4d;
-  --glass: rgba(0,0,0,0.32);
-  --glass-strong: rgba(0,0,0,0.85);
-  --text:#fff;
+body {
+    font-family: 'JustDance', Arial, sans-serif;
+    background: url('IMG_2223.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    margin:0; padding:0;
+    color:#fff;
+    overflow-x:hidden;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; padding:0;
+header {
+    font-family:'JustDance', Arial,sans-serif;
+    font-weight: normal;
+    background: rgba(255,77,77,0.3);
+    padding: 1em 1.5em;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    box-shadow:0 4px 6px rgba(0,0,0,0.3);
+}
+
+header h1 { 
+    margin:0; 
+    font-size:2.2em;
+    letter-spacing:2px;
+}
+
+#hamburger {
+    width:30px; height:20px; cursor:pointer; display:flex; flex-direction:column; justify-content:space-between;
+}
+#hamburger div { height:4px; background:#ffbb33; border-radius:2px; transition:0.3s; }
+
+main {
+    max-width:900px;
+    margin:2em auto;
+    padding:2em;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    border-radius:16px;
+}
+
+h2 { color:#ffbb33; margin-top:1.5em; }
+
+input, button {
+    font-size:1em; border-radius:12px; border:none; padding:0.8em; margin-bottom:0.5em;
+}
+input[type="text"], input[type="url"], input[type="email"], input[type="password"] {
+    width:100%;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(6px);
+    transition: border 0.3s, background 0.3s;
+}
+input::placeholder { color:#ccc; }
+input:focus { border:1px solid #ffbb33; background: rgba(255,255,255,0.2); outline:none; }
+
+button {
+    background: linear-gradient(135deg,#ff4d4d,#ffbb33);
+    color: #fff;
+    font-weight:bold;
+    cursor:pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    padding:0.8em 1.5em;
+}
+button:hover {
+    transform: scale(1.05);
+    box-shadow:0 8px 20px rgba(255,187,51,0.6);
+    background: linear-gradient(135deg,#ffbb33,#ff4d4d);
+}
+
+.post { background: rgba(30,30,30,0.4); backdrop-filter: blur(8px); padding:1em; border-radius:12px; margin-bottom:1em; box-shadow:0 8px 20px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s; position: relative;}
+.post:hover { transform: translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,0.6);}
+.author { font-weight:bold; color:#ffbb33; margin-bottom:0.5em; display:flex; align-items:center; gap:8px;}
+.author img { width:32px; height:32px; border-radius:50%; object-fit:cover; }
+.video-container { position:relative; width:100%; height:0; padding-bottom:56.25%; margin-top:0.5em; }
+.video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:8px;}
+.delete-btn { margin-top:0.5em; background:#ff5555; color:#fff; border:none; padding:0.5em 1em; border-radius:8px; cursor:pointer; transition: background 0.3s, transform 0.2s;}
+.delete-btn:hover { background:#e04343; transform: scale(1.05);}
+.post.own { border:2px solid #ffbb33;}
+.tag-box { font-family:'JustDance',Arial,sans-serif; display:inline-block; background:rgba(255,187,51,0.2); color:#ffbb33; padding:4px 10px; margin:3px 3px 0 0; border-radius:8px; font-size:0.85em; cursor:pointer; }
+
+/* Avatar e menu */
+#menuAvatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 1em 0;
+}
+#menuAvatar img {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 3px solid #ffbb33;
+  object-fit: cover;
+  box-shadow: 0 0 15px rgba(255, 187, 51, 0.6);
+}
+#menuAvatarName {
   font-family: 'JustDance', Arial, sans-serif;
-  color:var(--text);
-  background: url('IMG_2223.jpeg') no-repeat center center fixed;
-  background-size: cover;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  font-size: 1.6em;
+  font-weight: bold;
+  color: #ffbb33;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(255, 187, 51, 0.7);
+}
+#menuXP {
+  font-family:'JustDance',Arial,sans-serif;
+  font-size:1.2em;
+  font-weight:bold;
+  color:#ffbb33;
+  text-align:center;
 }
 
-/* header */
-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:1rem 1.25rem;
-  background: rgba(255,77,77,0.28);
-  box-shadow:0 4px 6px rgba(0,0,0,0.28);
-  position:sticky; top:0; z-index:50;
+/* Likes e views */
+.likeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ff5722, #ff9800);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-header h1{margin:0; font-size:1.4rem; letter-spacing:1.6px}
-#hamburger{
-  width:36px; height:24px; display:flex; flex-direction:column; justify-content:space-between;
-  cursor:pointer; align-items:center;
+.likeBtn i { font-size: 1.2em; transition: color 0.3s; }
+.likeBtn:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255,87,34,0.6); }
+.likeBtn.liked { background: linear-gradient(135deg, #ff1744, #ff5252); }
+.likeCount, .viewsCount { font-size: 0.9em; color: #eee; font-weight: 600; }
+
+/* Menu lateral */
+#menuContent {
+    position: fixed; top:0; right:-300px;
+    width:250px; height:100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+    padding:1em;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.5);
+    transition: right 0.3s;
+    z-index: 1001;
 }
-#hamburger div{width:100%; height:4px; border-radius:4px; background:var(--accent); transition:transform .22s}
+#menuContent.show { right:0; }
 
-/* layout */
-main{
-  max-width:980px; margin:1.6rem auto; padding:1.4rem;
-  background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.28));
-  backdrop-filter: blur(8px);
-  border-radius:14px;
+#menuOverlay {
+    position: fixed; top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+    opacity:0; pointer-events:none;
+    transition: opacity 0.3s;
+    z-index:1000;
 }
+#menuOverlay.show { opacity:1; pointer-events:auto; }
 
-/* inputs */
-h2{color:var(--accent); margin-top:1rem}
-input,button,textarea,select{
-  font-size:1rem; border-radius:10px; padding:.7rem .85rem; border:1px solid rgba(255,255,255,0.08);
-}
-input[type="text"], input[type="url"], input[type="email"], input[type="password"]{
-  width:100%; background: rgba(255,255,255,0.06); color:var(--text);
-}
-input::placeholder{color:#ddd}
-button{ background: linear-gradient(135deg,var(--accent-2),var(--accent)); color:#fff; border:none; cursor:pointer; padding:.7rem 1rem; font-weight:700;}
-button[disabled]{opacity:.5; cursor:not-allowed}
-
-/* posts */
-.post{background: rgba(10,10,10,0.35); padding:1rem; border-radius:10px; margin: .9rem 0; box-shadow:0 8px 20px rgba(0,0,0,0.45)}
-.post.own{outline:2px solid var(--accent)}
-.author{display:flex; align-items:center; gap:.6rem; font-weight:700; color:var(--accent)}
-.author img{width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,187,51,0.25)}
-.video-container{position:relative; width:100%; padding-bottom:56.25%; margin-top:.5rem}
-.video-container iframe{position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:8px}
-
-/* tags */
-.tag-box{display:inline-block; background:rgba(255,187,51,0.14); color:var(--accent); padding:4px 8px; margin:4px 6px 0 0; border-radius:8px; cursor:pointer; font-size:.85rem}
-
-/* menu lateral */
-#menuOverlay{position:fixed; inset:0; background:rgba(0,0,0,0.3); opacity:0; pointer-events:none; transition:opacity .22s; z-index:90}
-#menuOverlay.show{opacity:1; pointer-events:auto}
-#menuContent{position:fixed; right:-320px; top:0; height:100%; width:300px; background:var(--glass-strong); padding:1rem; transition:right .26s; z-index:95; overflow:auto}
-#menuContent.show{right:0}
-
-/* avatar list */
-#avatarList, #avatarListMenu{display:flex; gap:.5rem; flex-wrap:wrap}
-.avatar-thumb{width:64px; height:64px; border-radius:50%; object-fit:cover; cursor:pointer; border:2px solid rgba(255,255,255,0.06)}
-
-/* responsive */
-@media (max-width:640px){
-  header h1{font-size:1.1rem}
-  main{margin:1rem; padding:1rem}
-}
+.menu-btn { display:block; margin-top:1em; background:#ffbb33; color:#000; width:100%; border-radius:8px; padding:0.6em; text-align:center; cursor:pointer;}
+.menu-btn:hover { background:#ffdd66; }
 </style>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
 <header>
-  <h1>AUTODANCE SHARE ONLINE</h1>
-  <!-- hamburguer sempre no HTML (visível mesmo sem JS) -->
-  <button id="hamburger" aria-label="Abrir menu" title="Menu">
-    <div></div><div></div><div></div>
-  </button>
+<h1>AUTODANCE SHARE ONLINE</h1>
+<div id="hamburger"><div></div><div></div><div></div></div>
 </header>
 
-<!-- overlay e menu -->
-<div id="menuOverlay" aria-hidden="true"></div>
-<aside id="menuContent" aria-hidden="true" role="complementary">
-  <h2>Perfil</h2>
-  <div id="menuAvatar">
-    <img src="" alt="Avatar" width="100" height="100">
-    <div id="menuAvatarName" style="margin-top:.5rem;font-weight:700;color:var(--accent)"></div>
-    <div id="menuXP" style="margin-top:.4rem;color:var(--accent)">XP: 0</div>
-  </div>
+<div id="menuOverlay"></div>
 
-  <section style="margin-top:1rem">
-    <h3>Alterar Avatar</h3>
-    <div id="avatarListMenu"></div>
-  </section>
-
-  <button class="menu-btn" id="logoutBtn" style="margin-top:1rem">Logout</button>
-</aside>
+<div id="menuContent">
+    <h2>Perfil</h2>
+    <div id="menuAvatar">
+      <img src="">
+      <span id="menuAvatarName"></span>
+      <div id="menuXP">XP: 0</div>
+    </div>
+    <div>
+        <h3>Alterar Avatar</h3>
+        <div id="avatarListMenu"></div>
+    </div>
+    <button class="menu-btn" id="logoutBtn">Logout</button>
+</div>
 
 <main>
-  <h2>Login / Registro</h2>
-  <div style="display:grid; gap:.5rem; margin-bottom:1rem; max-width:520px">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="senha" placeholder="Senha">
-    <div style="display:flex; gap:.6rem">
-      <button id="loginBtn">Login / Criar conta</button>
-      <button id="testBtn" title="Testar erro">Testar (dev)</button>
-    </div>
-    <div id="authMsg" aria-live="polite" style="color:#ffd"></div>
-  </div>
+<h2>Login / Registro</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="senha" placeholder="Senha">
+<button id="loginBtn">Login / Criar conta</button>
 
-  <h2>Escolha seu avatar</h2>
-  <div id="avatarList" style="margin-bottom:1rem"></div>
+<h2>Escolha seu avatar</h2>
+<div id="avatarList"></div>
 
-  <h2>Poste sua autodance</h2>
-  <div style="display:grid; gap:.5rem; max-width:720px; margin-bottom:1rem">
-    <input type="text" id="author" placeholder="Seu nome" disabled>
-    <input type="url" id="videoUrl" placeholder="Cole o src do embed Streamable (ex: https://streamable.com/e/abcd)" disabled>
-    <input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
-    <button id="postBtn" disabled>Postar</button>
-  </div>
+<h2>Poste sua autodance</h2>
+<input type="text" id="author" placeholder="Seu nome" disabled>
+<input type="url" id="videoUrl" placeholder="Cole o embed do Streamable (src)" disabled>
+<input type="text" id="tags" placeholder="Tags (ex: Just Dance 2015, Solo, Funk)" disabled>
+<button id="postBtn" disabled>Postar</button>
 
-  <h2>Pesquisar por tag</h2>
-  <input type="text" id="searchInput" placeholder="Pesquisar tag..." style="max-width:420px; margin-bottom:1rem">
+<h2>Pesquisar por tag</h2>
+<input type="text" id="searchInput" placeholder="Pesquisar tag...">
 
-  <h2>Autodances enviadas</h2>
-  <div id="posts"></div>
+<h2>Autodances enviadas</h2>
+<div id="posts"></div>
 </main>
 
-<!-- ============================
-     SCRIPTS
-     ============================ -->
 <script type="module">
-/*
-  Versão reescrita, limpa e mais segura.
-  Principais pontos:
-  - Usa Firebase 10.x (imports compatíveis com import maps via URL)
-  - Trata erros com try/catch
-  - Usa update() para não sobrescrever nó do usuário
-  - Sanitiza texto ao inserir no DOM
-  - Avatar list usa URLs válidas
-  - Menu/hamburguer funciona mesmo em mobile
-*/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, push, set, onValue, get, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-/* --------- FIREBASE (versão estável 10.x) --------- */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, push, set, onValue, get, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-/* replace with your config (kept original values you provided) */
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
   authDomain: "auto-dance.firebaseapp.com",
@@ -183,435 +226,307 @@ const firebaseConfig = {
   messagingSenderId: "960760470726",
   appId: "1:960760470726:web:f5af55d01df6a2be0d4bc7"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-/* --------- ELEMENTS --------- */
-const emailInput = document.getElementById('email');
-const senhaInput = document.getElementById('senha');
-const loginBtn = document.getElementById('loginBtn');
-const testBtn = document.getElementById('testBtn');
-const authMsg = document.getElementById('authMsg');
+// Elementos
+const emailInput=document.getElementById("email");
+const senhaInput=document.getElementById("senha");
+const loginBtn=document.getElementById("loginBtn");
+const authorInput=document.getElementById("author");
+const videoInput=document.getElementById("videoUrl");
+const tagsInput=document.getElementById("tags");
+const postBtn=document.getElementById("postBtn");
+const postsContainer=document.getElementById("posts");
+const searchInput=document.getElementById("searchInput");
+const avatarList=document.getElementById("avatarList");
+const avatarListMenu=document.getElementById("avatarListMenu");
+const menuAvatar=document.querySelector("#menuAvatar img");
+const menuAvatarName=document.getElementById("menuAvatarName");
+const menuXP=document.getElementById("menuXP");
+const logoutBtn=document.getElementById("logoutBtn");
+const hamburger=document.getElementById("hamburger");
+const menuContent=document.getElementById("menuContent");
+const menuOverlay=document.getElementById("menuOverlay");
 
-const authorInput = document.getElementById('author');
-const videoInput = document.getElementById('videoUrl');
-const tagsInput = document.getElementById('tags');
-const postBtn = document.getElementById('postBtn');
+let currentUser=null;
+let selectedAvatar=null;
+const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-const postsContainer = document.getElementById('posts');
-const searchInput = document.getElementById('searchInput');
-
-const avatarList = document.getElementById('avatarList');
-const avatarListMenu = document.getElementById('avatarListMenu');
-const menuAvatarImg = document.querySelector('#menuAvatar img');
-const menuAvatarName = document.getElementById('menuAvatarName');
-const menuXP = document.getElementById('menuXP');
-
-const logoutBtn = document.getElementById('logoutBtn');
-const hamburger = document.getElementById('hamburger');
-const menuContent = document.getElementById('menuContent');
-const menuOverlay = document.getElementById('menuOverlay');
-
-/* --------- STATE --------- */
-let currentUser = null;
-let selectedAvatar = null;
-
-/* blocked words (kept, but you can reduce/expand as needed) */
-const blockedWords = ["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
-
-/* --------- AVATAR URLS (use imagens hospedadas acessíveis) --------- */
-const avatarUrls = [
-  "https://i.pravatar.cc/150?img=12",
-  "https://i.pravatar.cc/150?img=18",
-  "https://i.pravatar.cc/150?img=21",
-  "https://i.pravatar.cc/150?img=29",
-  "https://i.imgur.com/4M34hi2.png" // fallback
-];
-
-/* --------- UTILS --------- */
-function escapeHtml(str){
-  if(!str) return "";
-  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s]));
-}
-function sanitizeUrl(url){
-  if(!url) return "";
-  try{
-    const u = new URL(url);
-    // allow only streamable or known hosts (very basic)
-    if(u.hostname.includes("streamable.com") || u.hostname.includes("streamableusercontent.com")) return url;
-    // allow embed src formats starting with https
-    if(u.protocol === "https:") return url;
-  }catch(e){}
-  return "";
-}
-function showMessage(el, msg, timeout=3000){
-  el.textContent = msg;
-  if(timeout>0) setTimeout(()=>{ if(el.textContent===msg) el.textContent = ""; }, timeout);
-}
-
-/* --------- BUILD AVATAR PICKERS --------- */
+// Monta seleção de avatar
 function buildAvatarList(listEl){
-  listEl.innerHTML = "";
-  avatarUrls.forEach(url=>{
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = "avatar";
-    img.className = "avatar-thumb";
-    img.loading = "lazy";
-    img.addEventListener('click', ()=> {
-      updateUserAvatar(url).catch(e=>console.error(e));
-    });
+    listEl.innerHTML="";
+    const img=document.createElement("img");
+    img.src="https://raphamodelagem3d-lab.github.io/Login/";
+    img.onclick=()=> updateUserAvatar(img.src);
     listEl.appendChild(img);
-  });
 }
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
 
-/* --------- UPDATE AVATAR (usa update() para não sobrescrever outros campos) --------- */
-async function updateUserAvatar(url){
-  selectedAvatar = url;
-  menuAvatarImg.src = selectedAvatar || "";
-  if(!currentUser) return;
-  try{
-    await update(ref(db, 'users/' + currentUser.uid), { avatar: selectedAvatar });
-  }catch(err){
-    console.error("Erro ao salvar avatar:", err);
-    showMessage(authMsg, "Erro ao salvar avatar");
-  }
-  // atualiza thumbs locais (view only)
-  postsContainer.querySelectorAll('.post.own .author img').forEach(i=> i.src = selectedAvatar);
+// Atualiza avatar
+function updateUserAvatar(url){
+    selectedAvatar=url;
+    if(currentUser) set(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
+    menuAvatar.src=selectedAvatar;
+    const posts=postsContainer.querySelectorAll(".post.own .author img");
+    posts.forEach(img=>img.src=selectedAvatar);
 }
 
-/* --------- AUTH (login / signup) --------- */
-loginBtn.addEventListener('click', async ()=>{
-  const email = emailInput.value.trim();
-  const senha = senhaInput.value.trim();
-  if(!email || !senha){ showMessage(authMsg, "Preencha email e senha"); return; }
-  try{
-    await signInWithEmailAndPassword(auth, email, senha);
-    showMessage(authMsg, "Login realizado", 1500);
-  }catch(err){
-    // tenta criar conta automaticamente
-    try{
-      await createUserWithEmailAndPassword(auth, email, senha);
-      showMessage(authMsg, "Conta criada — logando...", 2000);
-    }catch(e){
-      console.error("Erro auth:", e);
-      showMessage(authMsg, e.message || "Erro no login/criação");
+// Login / criar conta
+loginBtn.addEventListener("click", async ()=>{
+    const email=emailInput.value.trim();
+    const senha=senhaInput.value.trim();
+    if(!email||!senha){ alert("Preencha email e senha!"); return; }
+    try{ await signInWithEmailAndPassword(auth,email,senha); }
+    catch(e){ 
+        try{ await createUserWithEmailAndPassword(auth,email,senha); }
+        catch(err){ alert(err.message); return; }
     }
-  }
 });
 
-/* debug/test button (remove ou comente em produção) */
-testBtn.addEventListener('click', ()=> {
-  // aciona erro proposital para ver mensagens no console
-  console.log("Test button clicked — usuário atual:", currentUser ? currentUser.uid : "nenhum");
-});
-
-/* --------- addXP seguro --------- */
+// Adicionar XP
 async function addXP(amount){
-  if(!currentUser) return;
-  const xpRef = ref(db, `users/${currentUser.uid}/xp`);
-  try{
-    const snap = await get(xpRef);
-    const cur = snap.exists()? Number(snap.val()) : 0;
-    await set(xpRef, cur + Number(amount));
-  }catch(e){
-    console.error("Erro addXP:", e);
-  }
+    if(!currentUser) return;
+    const xpRef=ref(db,"users/"+currentUser.uid+"/xp");
+    const snapshot=await get(xpRef);
+    const currentXP = snapshot.exists()?snapshot.val():0;
+    await set(xpRef, currentXP + amount);
 }
 
-/* --------- LISTEN AUTH STATE --------- */
-onAuthStateChanged(auth, async user => {
-  if(user){
-    currentUser = user;
-    emailInput.disabled = true;
-    senhaInput.disabled = true;
-    loginBtn.disabled = true;
+// Detecta login
+onAuthStateChanged(auth, async user=>{
+    if(user){
+        currentUser=user;
+        emailInput.disabled=true;
+        senhaInput.disabled=true;
+        loginBtn.disabled=true;
+        authorInput.disabled=false;
+        videoInput.disabled=false;
+        tagsInput.disabled=false;
+        postBtn.disabled=false;
 
-    authorInput.disabled = false;
-    videoInput.disabled = false;
-    tagsInput.disabled = false;
-    postBtn.disabled = false;
+        const userRef=ref(db,"users/"+user.uid);
+        const snapshot=await get(userRef);
+        let storedName="";
+        if(snapshot.exists()){
+            const val=snapshot.val();
+            if(val.name){
+                storedName=val.name;
+                authorInput.value=storedName;
+                authorInput.disabled = true;
+            }
+            if(val.avatar){
+                selectedAvatar=val.avatar;
+                menuAvatar.src=selectedAvatar;
+            }
+        }
+        menuAvatarName.textContent=storedName;
 
-    // carrega dados do usuário
-    try{
-      const userSnap = await get(ref(db, `users/${user.uid}`));
-      const data = userSnap.exists()? userSnap.val() : {};
-      if(data.name){
-        authorInput.value = data.name;
-        authorInput.disabled = true;
-        menuAvatarName.textContent = data.name;
-      } else {
-        menuAvatarName.textContent = "";
-      }
-      if(data.avatar){
-        selectedAvatar = data.avatar;
-        menuAvatarImg.src = selectedAvatar;
-      }
-    }catch(e){
-      console.error("Erro ao ler usuário:", e);
+        // Carrega XP
+        const xpRef = ref(db, "users/" + user.uid + "/xp");
+        onValue(xpRef, snapshot => {
+            const xp = snapshot.exists() ? snapshot.val() : 0;
+            menuXP.textContent = `XP: ${xp}`;
+        });
+
+        loadPosts();
+    } else {
+        currentUser=null;
+        emailInput.disabled=false;
+        senhaInput.disabled=false;
+        loginBtn.disabled=false;
+        authorInput.disabled=true;
+        videoInput.disabled=true;
+        tagsInput.disabled=true;
+        postBtn.disabled=true;
+        postsContainer.innerHTML="";
+        menuAvatar.src="";
+        menuAvatarName.textContent="";
+        menuXP.textContent="XP: 0";
     }
-
-    // XP realtime
-    const xpRef = ref(db, `users/${user.uid}/xp`);
-    onValue(xpRef, snap => {
-      const xp = snap.exists()? snap.val() : 0;
-      menuXP.textContent = `XP: ${xp}`;
-    });
-
-    // carrega posts
-    loadPosts();
-  } else {
-    // estado anonimo
-    currentUser = null;
-    emailInput.disabled = false;
-    senhaInput.disabled = false;
-    loginBtn.disabled = false;
-
-    authorInput.disabled = true;
-    videoInput.disabled = true;
-    tagsInput.disabled = true;
-    postBtn.disabled = true;
-
-    postsContainer.innerHTML = "";
-    menuAvatarImg.src = "";
-    menuAvatarName.textContent = "";
-    menuXP.textContent = "XP: 0";
-  }
 });
 
-/* --------- POSTAR (validações + update user sem sobrescrever) --------- */
-postBtn.addEventListener('click', async ()=>{
-  if(!currentUser) return showMessage(authMsg, "Faça login para postar");
+// Adiciona post
+postBtn.addEventListener("click", async ()=>{
+    if(!currentUser) return;
 
-  // garante nome salvo
-  const userRef = ref(db, `users/${currentUser.uid}`);
-  try{
-    const snap = await get(userRef);
-    const storedName = snap.exists()? (snap.val().name || "") : "";
+    const userRef = ref(db,"users/"+currentUser.uid);
+    const snapshot = await get(userRef);
+    let storedName = "";
+    if(snapshot.exists()) storedName = snapshot.val().name || "";
 
     let author = storedName;
     if(!author){
-      author = authorInput.value.trim();
-      if(!author){ showMessage(authMsg, "Digite seu nome"); return; }
-      await update(userRef, { name: author, avatar: selectedAvatar || null });
-      authorInput.value = author; authorInput.disabled = true;
-      menuAvatarName.textContent = author;
+        author = authorInput.value.trim();
+        if(!author){ alert("Digite seu nome!"); return; }
+        await set(userRef,{name:author, avatar:selectedAvatar});
+        authorInput.value = author;
+        authorInput.disabled = true;
+        menuAvatarName.textContent = author;
     }
 
     const video = videoInput.value.trim();
-    const tags = tagsInput.value.trim().split(',').map(t=>t.trim()).filter(Boolean);
+    const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
 
-    if(!selectedAvatar){ showMessage(authMsg, "Selecione um avatar"); return; }
-    const safeVideo = sanitizeUrl(video);
-    if(!safeVideo || !safeVideo.includes("streamable.com")){ showMessage(authMsg, "Use link do Streamable (src)"); return; }
-    if(tags.some(t=> blockedWords.some(w=> t.toLowerCase().includes(w)) )){ showMessage(authMsg, "Tags impróprias detectadas"); return; }
+    if(!selectedAvatar){ alert("Selecione um avatar!"); return; }
+    if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
+    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
 
-    const newPostRef = push(ref(db, 'posts'));
-    await set(newPostRef, {
-      author,
-      avatar: selectedAvatar,
-      video: safeVideo,
-      tags,
-      uid: currentUser.uid,
-      createdAt: Date.now()
-    });
+    const postRef = push(ref(db,"posts"));
+    await set(postRef,{author,avatar:selectedAvatar,video,tags,uid:currentUser.uid});
 
+    // Adiciona XP por postar
     await addXP(50);
-    videoInput.value = ""; tagsInput.value = "";
-    showMessage(authMsg, "Post enviado!", 1500);
-  }catch(err){
-    console.error("Erro ao postar:", err);
-    showMessage(authMsg, "Erro ao postar");
-  }
+
+    videoInput.value = "";
+    tagsInput.value = "";
 });
 
-/* --------- LIKES e VIEWS (separado) --------- */
-function addLikeAndViewFeature(postDiv, postId){
-  const feature = document.createElement('div');
-  feature.style.display = "flex"; feature.style.gap = "12px"; feature.style.alignItems = "center"; feature.style.marginTop = ".6rem";
+// Likes e views
+function addLikeAndViewFeature(postDiv, postId) {
+    const featureSection = document.createElement("div");
+    featureSection.style.display = "flex";
+    featureSection.style.alignItems = "center";
+    featureSection.style.gap = "16px";
+    featureSection.style.marginTop = "0.5em";
 
-  // like button
-  const likeBtn = document.createElement('button');
-  likeBtn.className = "likeBtn";
-  likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up"></i> <span class="likeText">Curtir</span>`;
-  const likeCount = document.createElement('span');
-  likeCount.className = "likeCount";
-  likeCount.textContent = "0 likes";
+    // Likes
+    const likeBtn = document.createElement("button");
+    likeBtn.className = "likeBtn";
+    likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up"></i> <span class="likeText">Curtir</span>`;
+    const likeCount = document.createElement("span");
+    likeCount.className = "likeCount";
+    likeCount.textContent = "0 likes";
+    featureSection.appendChild(likeBtn);
+    featureSection.appendChild(likeCount);
 
-  // views
-  const viewsEl = document.createElement('span');
-  viewsEl.className = "viewsCount";
-  viewsEl.textContent = "0 views";
+    // Views
+    const viewsEl = document.createElement("span");
+    viewsEl.className = "viewsCount";
+    viewsEl.style.fontSize = "0.9em";
+    viewsEl.style.color = "#eee";
+    viewsEl.style.fontWeight = "600";
+    viewsEl.textContent = "0 views";
+    featureSection.appendChild(viewsEl);
 
-  feature.appendChild(likeBtn);
-  feature.appendChild(likeCount);
-  feature.appendChild(viewsEl);
-  postDiv.appendChild(feature);
+    postDiv.appendChild(featureSection);
 
-  if(!currentUser) return; // precisa estar logado para curtir (simplificação)
+    const userLikeRef = ref(db, `likes/${postId}/users/${currentUser.uid}`);
+    const countRef = ref(db, `likes/${postId}/count`);
+    const viewRef = ref(db, `views/${postId}`);
 
-  const userLikeRef = ref(db, `likes/${postId}/users/${currentUser.uid}`);
-  const countRef = ref(db, `likes/${postId}/count`);
-  const viewRef = ref(db, `views/${postId}`);
+    // Likes
+    onValue(countRef, snapshot => {
+        likeCount.textContent = snapshot.exists() ? snapshot.val() + " likes" : "0 likes";
+    });
+    onValue(userLikeRef, snapshot => {
+        if(snapshot.exists() && snapshot.val() === true){
+            likeBtn.classList.add("liked");
+            likeBtn.querySelector("i").classList.replace("fa-regular","fa-solid");
+            likeBtn.querySelector(".likeText").textContent = "Curtido";
+        } else {
+            likeBtn.classList.remove("liked");
+            likeBtn.querySelector("i").classList.replace("fa-solid","fa-regular");
+            likeBtn.querySelector(".likeText").textContent = "Curtir";
+        }
+    });
 
-  // observa contadores
-  onValue(countRef, snap => likeCount.textContent = (snap.exists()? snap.val():0) + " likes");
-  onValue(userLikeRef, snap => {
-    const liked = snap.exists() && snap.val() === true;
-    const i = likeBtn.querySelector('i'); const lt = likeBtn.querySelector('.likeText');
-    if(liked){
-      likeBtn.classList.add('liked'); if(i) { i.classList.remove('fa-regular'); i.classList.add('fa-solid'); } if(lt) lt.textContent = 'Curtido';
-    } else {
-      likeBtn.classList.remove('liked'); if(i){ i.classList.remove('fa-solid'); i.classList.add('fa-regular'); } if(lt) lt.textContent = 'Curtir';
-    }
-  });
+    likeBtn.addEventListener("click", async () => {
+        const alreadyLiked = likeBtn.classList.contains("liked");
+        const countSnap = await get(countRef);
+        let currentCount = countSnap.exists() ? countSnap.val() : 0;
 
-  likeBtn.addEventListener('click', async ()=>{
-    try{
-      const already = likeBtn.classList.contains('liked');
-      const snap = await get(countRef);
-      const cur = snap.exists()? snap.val() : 0;
-      if(already){
-        await set(userLikeRef, false);
-        await set(countRef, Math.max(cur-1,0));
-      } else {
-        await set(userLikeRef, true);
-        await set(countRef, cur+1);
-      }
-    }catch(e){ console.error("Erro like:", e); }
-  });
+        if(alreadyLiked){
+            await set(userLikeRef, false);
+            await set(countRef, Math.max(currentCount-1,0));
+        } else {
+            await set(userLikeRef, true);
+            await set(countRef, currentCount+1);
+        }
+    });
 
-  // views (usa localStorage para não inflar)
-  (async ()=>{
-    try{
-      const viewed = JSON.parse(localStorage.getItem('viewedPosts') || '[]');
-      const snap = await get(viewRef);
-      let cur = snap.exists()? snap.val() : 0;
-      if(!viewed.includes(postId)){
-        cur += 1;
-        await set(viewRef, cur);
-        viewed.push(postId);
-        localStorage.setItem('viewedPosts', JSON.stringify(viewed));
-      }
-      viewsEl.textContent = cur + " views";
-    }catch(e){ console.error("Erro views:", e); }
-  })();
+    // Views
+    const viewedPosts = JSON.parse(localStorage.getItem("viewedPosts") || "[]");
+    get(viewRef).then(snap => {
+        let current = snap.exists() ? snap.val() : 0;
+        if(!viewedPosts.includes(postId)){
+            current += 1;
+            set(viewRef, current);
+            viewedPosts.push(postId);
+            localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
+        }
+        viewsEl.textContent = current + " views";
+    });
 }
 
-/* --------- LOAD POSTS (ordena por createdAt desc e sanitiza) --------- */
+// Carrega posts
 function loadPosts(){
-  onValue(ref(db, 'posts'), snapshot => {
-    postsContainer.innerHTML = "";
-    const data = snapshot.exists()? snapshot.val() : null;
-    if(!data) return;
-    const items = Object.entries(data).map(([k,v]) => ({ key:k, val:v }));
-    items.sort((a,b)=> (b.val.createdAt || 0) - (a.val.createdAt || 0));
-    items.forEach(({key, val})=>{
-      const div = document.createElement('div');
-      div.className = 'post';
-      if(currentUser && val.uid === currentUser.uid) div.classList.add('own');
-
-      const author = escapeHtml(val.author || 'Anônimo');
-      const avatar = val.avatar || avatarUrls[0];
-      const video = escapeHtml(val.video || '');
-      const tags = Array.isArray(val.tags)? val.tags : [];
-
-      // estrutura segura
-      div.innerHTML = `
-        <div class="author"><img src="${avatar}" alt="avatar"><span>${author}:</span></div>
-        <div class="video-container"><iframe src="${video}" allowfullscreen referrerpolicy="no-referrer"></iframe></div>
-      `;
-
-      // tags
-      if(tags.length){
-        const tagsWrap = document.createElement('div');
-        tagsWrap.style.marginTop = ".5rem";
-        tags.forEach(t=>{
-          const s = document.createElement('span');
-          s.className = 'tag-box';
-          s.textContent = t;
-          tagsWrap.appendChild(s);
+    onValue(ref(db,"posts"),snapshot=>{
+        postsContainer.innerHTML="";
+        const data=snapshot.val();
+        if(!data) return;
+        Object.entries(data).reverse().forEach(([key,post])=>{
+            const div=document.createElement("div");
+            div.className="post";
+            if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
+            div.innerHTML=`
+                <div class="author"><img src="${post.avatar}">${post.author}:</div>
+                <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
+            `;
+            if(post.tags&&post.tags.length){
+                const tagsContainer=document.createElement("div");
+                tagsContainer.style.marginTop="0.5em";
+                post.tags.forEach(tag=>{
+                    const tagBox=document.createElement("span");
+                    tagBox.className="tag-box";
+                    tagBox.textContent=tag;
+                    tagsContainer.appendChild(tagBox);
+                });
+                div.appendChild(tagsContainer);
+            }
+            if(currentUser && post.uid===currentUser.uid){
+                const delBtn=document.createElement("button");
+                delBtn.textContent="Excluir";
+                delBtn.className="delete-btn";
+                delBtn.onclick=()=> remove(ref(db,"posts/"+key));
+                div.appendChild(delBtn);
+            }
+            if(currentUser) addLikeAndViewFeature(div,key);
+            postsContainer.appendChild(div);
         });
-        div.appendChild(tagsWrap);
-      }
-
-      // excluir se for dono
-      if(currentUser && val.uid === currentUser.uid){
-        const del = document.createElement('button');
-        del.className = 'delete-btn';
-        del.textContent = 'Excluir';
-        del.addEventListener('click', ()=> remove(ref(db, 'posts/' + key)).catch(e=>console.error(e)));
-        div.appendChild(del);
-      }
-
-      // likes/views (só adiciona se user logado)
-      if(currentUser) addLikeAndViewFeature(div, key);
-
-      postsContainer.appendChild(div);
     });
-  }, err => console.error("Erro onValue posts:", err));
 }
 
-/* --------- PESQUISA com debounce --------- */
-let searchTimer = null;
-searchInput.addEventListener('input', ()=>{
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(()=> {
-    const q = searchInput.value.trim().toLowerCase();
-    document.querySelectorAll('.post').forEach(p=>{
-      const tags = Array.from(p.querySelectorAll('.tag-box')).map(el=>el.textContent.toLowerCase());
-      if(!q) p.style.display = '';
-      else p.style.display = tags.some(t=> t.includes(q)) ? '' : 'none';
+// Pesquisar
+searchInput.addEventListener("input", ()=>{
+    const filter=searchInput.value.trim().toLowerCase();
+    const posts=postsContainer.querySelectorAll(".post");
+    posts.forEach(p=>{
+        const tags=Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
+        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
     });
-  }, 220);
 });
 
-/* --------- HAMBURGER + MENU --------- */
-function showMenu(show){
-  if(show){
-    menuContent.classList.add('show');
-    menuOverlay.classList.add('show');
-    menuContent.setAttribute('aria-hidden','false');
-    menuOverlay.setAttribute('aria-hidden','false');
-  } else {
-    menuContent.classList.remove('show');
-    menuOverlay.classList.remove('show');
-    menuContent.setAttribute('aria-hidden','true');
-    menuOverlay.setAttribute('aria-hidden','true');
-  }
-}
-hamburger.addEventListener('click', ()=> showMenu(true));
-menuOverlay.addEventListener('click', ()=> showMenu(false));
-
-/* --------- LOGOUT --------- */
-logoutBtn.addEventListener('click', async ()=>{
-  try{
-    await signOut(auth);
-    showMessage(authMsg, "Desconectado", 1400);
-    showMenu(false);
-  }catch(e){ console.error("Erro logout:", e); showMessage(authMsg, "Erro ao deslogar"); }
+// Hamburger
+hamburger.addEventListener("click", ()=>{
+    menuContent.classList.toggle("show");
+    menuOverlay.classList.toggle("show");
+});
+menuOverlay.addEventListener("click", ()=>{
+    menuContent.classList.remove("show");
+    menuOverlay.classList.remove("show");
 });
 
-/* --------- safety: render fallback if JS partially falhar --------- */
-/* (ex.: se Firebase não carregar, menu e botões ainda aparecem) */
-window.addEventListener('error', (ev)=>{
-  console.error("Erro não tratado:", ev.error || ev.message);
-  showMessage(authMsg, "Ocorreu um erro — veja console (dev).", 4000);
+// Logout
+logoutBtn.addEventListener("click", async ()=>{
+    if(currentUser){
+        await signOut(auth);
+        menuContent.classList.remove("show");
+        menuOverlay.classList.remove("show");
+    }
 });
-
-/* --------- READY (pequeno init) --------- */
-(function init(){
-  try{
-    buildAvatarList(avatarList);
-    buildAvatarList(avatarListMenu);
-    // garante que o hamburger esteja visível mesmo sem JS pesado
-    hamburger.style.display = 'flex';
-  }catch(e){ console.error("Init erro:", e); }
-})();
 </script>
 </body>
 </html>
