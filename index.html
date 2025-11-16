@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AUTODANCE SHARE ONLINE</title>
 <style>
 @font-face { font-family:'JustDance'; src:url('Just Dance Font Regular.ttf') format('truetype'); }
@@ -179,7 +179,7 @@ button:hover {
 <div id="menuContent">
     <h2>Perfil</h2>
     <div id="menuAvatar">
-      <img src="">
+      <img src="" alt="Avatar">
       <span id="menuAvatarName"></span>
       <div id="menuXP">XP: 0</div>
     </div>
@@ -197,7 +197,7 @@ button:hover {
 <button id="loginBtn">Login / Criar conta</button>
 
 <h2>Escolha seu avatar</h2>
-<div id="avatarList"></div>
+<div id="avatarList" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
 
 <h2>Poste sua autodance</h2>
 <input type="text" id="author" placeholder="Seu nome" disabled>
@@ -213,9 +213,12 @@ button:hover {
 </main>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getDatabase, ref, push, set, onValue, get, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+/* ============================
+   FIREBASE (versão válida)
+   ============================ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, push, set, onValue, get, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCA2XWZzavTNdHi_w8X5aASfBTfoLVsghY",
@@ -230,7 +233,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Elementos
+/* ============================
+   ELEMENTOS
+   ============================ */
 const emailInput=document.getElementById("email");
 const senhaInput=document.getElementById("senha");
 const loginBtn=document.getElementById("loginBtn");
@@ -254,51 +259,97 @@ let currentUser=null;
 let selectedAvatar=null;
 const blockedWords=["puta","merda","caralho","bosta","porra","foda","fodase","fuck","shit","bitch","asshole","damn","dick","piss","crap","cunt","coño","gilipollas","joder","cabron","merde","putain","con","connard","salope","bordel","nigger","nigga","slut","whore","fag","retard"];
 
-// Monta seleção de avatar
+/* ============================
+   Avatares (lista — troque pelos seus arquivos)
+   ============================ */
+const avatarUrls = [
+  // Exemplos — substitua por seus arquivos hospedados
+  "https://i.pravatar.cc/150?img=12",
+  "https://i.pravatar.cc/150?img=18",
+  "https://i.pravatar.cc/150?img=21",
+  // se tiver imagens no seu github, adicione: 
+  // "https://raphamodelagem3d-lab.github.io/Login/avatar1.png",
+];
+
+/* Monta seleção de avatar em dois lugares */
 function buildAvatarList(listEl){
-    listEl.innerHTML="";
-    const img=document.createElement("img");
-    img.src="https://raphamodelagem3d-lab.github.io/Login/";
-    img.onclick=()=> updateUserAvatar(img.src);
-    listEl.appendChild(img);
+    listEl.innerHTML = "";
+    avatarUrls.forEach(url=>{
+        const wrapper = document.createElement("div");
+        wrapper.style.cursor = "pointer";
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "avatar";
+        img.style.width = "64px";
+        img.style.height = "64px";
+        img.style.borderRadius = "50%";
+        img.style.border = "2px solid rgba(255,187,51,0.6)";
+        img.style.objectFit = "cover";
+        img.addEventListener("click", ()=> updateUserAvatar(url));
+        wrapper.appendChild(img);
+        listEl.appendChild(wrapper);
+    });
 }
 buildAvatarList(avatarList);
 buildAvatarList(avatarListMenu);
 
-// Atualiza avatar
-function updateUserAvatar(url){
+/* Atualiza avatar — usa update para não sobrescrever nó do usuário */
+async function updateUserAvatar(url){
     selectedAvatar=url;
-    if(currentUser) set(ref(db,"users/"+currentUser.uid),{avatar:selectedAvatar});
-    menuAvatar.src=selectedAvatar;
-    const posts=postsContainer.querySelectorAll(".post.own .author img");
-    posts.forEach(img=>img.src=selectedAvatar);
+    if(currentUser){
+        try{
+            await update(ref(db,"users/"+currentUser.uid), { avatar: selectedAvatar });
+        }catch(e){
+            console.error("Erro ao atualizar avatar:", e);
+        }
+    }
+    menuAvatar.src = selectedAvatar || "";
+    // Atualiza avatares dos posts do usuário localmente (cuidado: só muda a view)
+    const posts = postsContainer.querySelectorAll(".post.own .author img");
+    posts.forEach(img=> img.src = selectedAvatar);
 }
 
-// Login / criar conta
+/* ============================
+   Login / criar conta
+   ============================ */
 loginBtn.addEventListener("click", async ()=>{
     const email=emailInput.value.trim();
     const senha=senhaInput.value.trim();
     if(!email||!senha){ alert("Preencha email e senha!"); return; }
-    try{ await signInWithEmailAndPassword(auth,email,senha); }
-    catch(e){ 
-        try{ await createUserWithEmailAndPassword(auth,email,senha); }
-        catch(err){ alert(err.message); return; }
+    try{
+        await signInWithEmailAndPassword(auth,email,senha);
+    }catch(e){
+        // tenta criar conta se não conseguir logar
+        try{
+            await createUserWithEmailAndPassword(auth,email,senha);
+        }catch(err){
+            alert(err.message || "Erro ao criar conta.");
+            return;
+        }
     }
 });
 
-// Adicionar XP
+/* ============================
+   Adicionar XP (uso de get + update simples)
+   ============================ */
 async function addXP(amount){
     if(!currentUser) return;
-    const xpRef=ref(db,"users/"+currentUser.uid+"/xp");
-    const snapshot=await get(xpRef);
-    const currentXP = snapshot.exists()?snapshot.val():0;
-    await set(xpRef, currentXP + amount);
+    const xpRef = ref(db,"users/"+currentUser.uid+"/xp");
+    try{
+        const snap = await get(xpRef);
+        const currentXP = snap.exists()? snap.val() : 0;
+        await set(xpRef, currentXP + amount);
+    }catch(e){
+        console.error("Erro ao adicionar XP:", e);
+    }
 }
 
-// Detecta login
+/* ============================
+   Observa estado de autenticação
+   ============================ */
 onAuthStateChanged(auth, async user=>{
     if(user){
-        currentUser=user;
+        currentUser = user;
         emailInput.disabled=true;
         senhaInput.disabled=true;
         loginBtn.disabled=true;
@@ -307,226 +358,26 @@ onAuthStateChanged(auth, async user=>{
         tagsInput.disabled=false;
         postBtn.disabled=false;
 
-        const userRef=ref(db,"users/"+user.uid);
-        const snapshot=await get(userRef);
-        let storedName="";
-        if(snapshot.exists()){
-            const val=snapshot.val();
-            if(val.name){
-                storedName=val.name;
-                authorInput.value=storedName;
-                authorInput.disabled = true;
+        // carrega dados do usuário com proteção
+        const userRef = ref(db,"users/"+user.uid);
+        try{
+            const snapshot = await get(userRef);
+            let storedName = "";
+            if(snapshot.exists()){
+                const val = snapshot.val();
+                storedName = val.name || "";
+                if(val.avatar) {
+                    selectedAvatar = val.avatar;
+                    menuAvatar.src = selectedAvatar;
+                }
+                if(storedName){
+                    authorInput.value = storedName;
+                    authorInput.disabled = true;
+                    menuAvatarName.textContent = storedName;
+                } else {
+                    menuAvatarName.textContent = "";
+                }
             }
-            if(val.avatar){
-                selectedAvatar=val.avatar;
-                menuAvatar.src=selectedAvatar;
-            }
+        }catch(e){
+            console.error("Erro ao ler usuário:", e);
         }
-        menuAvatarName.textContent=storedName;
-
-        // Carrega XP
-        const xpRef = ref(db, "users/" + user.uid + "/xp");
-        onValue(xpRef, snapshot => {
-            const xp = snapshot.exists() ? snapshot.val() : 0;
-            menuXP.textContent = `XP: ${xp}`;
-        });
-
-        loadPosts();
-    } else {
-        currentUser=null;
-        emailInput.disabled=false;
-        senhaInput.disabled=false;
-        loginBtn.disabled=false;
-        authorInput.disabled=true;
-        videoInput.disabled=true;
-        tagsInput.disabled=true;
-        postBtn.disabled=true;
-        postsContainer.innerHTML="";
-        menuAvatar.src="";
-        menuAvatarName.textContent="";
-        menuXP.textContent="XP: 0";
-    }
-});
-
-// Adiciona post
-postBtn.addEventListener("click", async ()=>{
-    if(!currentUser) return;
-
-    const userRef = ref(db,"users/"+currentUser.uid);
-    const snapshot = await get(userRef);
-    let storedName = "";
-    if(snapshot.exists()) storedName = snapshot.val().name || "";
-
-    let author = storedName;
-    if(!author){
-        author = authorInput.value.trim();
-        if(!author){ alert("Digite seu nome!"); return; }
-        await set(userRef,{name:author, avatar:selectedAvatar});
-        authorInput.value = author;
-        authorInput.disabled = true;
-        menuAvatarName.textContent = author;
-    }
-
-    const video = videoInput.value.trim();
-    const tags = tagsInput.value.trim().split(",").map(t=>t.trim()).filter(t=>t);
-
-    if(!selectedAvatar){ alert("Selecione um avatar!"); return; }
-    if(!video.includes("streamable.com")){ alert("Só vídeos do Streamable são permitidos!"); return; }
-    if(tags.some(t=>blockedWords.some(w=>t.toLowerCase().includes(w)))){ alert("Tags impróprias não são permitidas!"); return; }
-
-    const postRef = push(ref(db,"posts"));
-    await set(postRef,{author,avatar:selectedAvatar,video,tags,uid:currentUser.uid});
-
-    // Adiciona XP por postar
-    await addXP(50);
-
-    videoInput.value = "";
-    tagsInput.value = "";
-});
-
-// Likes e views
-function addLikeAndViewFeature(postDiv, postId) {
-    const featureSection = document.createElement("div");
-    featureSection.style.display = "flex";
-    featureSection.style.alignItems = "center";
-    featureSection.style.gap = "16px";
-    featureSection.style.marginTop = "0.5em";
-
-    // Likes
-    const likeBtn = document.createElement("button");
-    likeBtn.className = "likeBtn";
-    likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up"></i> <span class="likeText">Curtir</span>`;
-    const likeCount = document.createElement("span");
-    likeCount.className = "likeCount";
-    likeCount.textContent = "0 likes";
-    featureSection.appendChild(likeBtn);
-    featureSection.appendChild(likeCount);
-
-    // Views
-    const viewsEl = document.createElement("span");
-    viewsEl.className = "viewsCount";
-    viewsEl.style.fontSize = "0.9em";
-    viewsEl.style.color = "#eee";
-    viewsEl.style.fontWeight = "600";
-    viewsEl.textContent = "0 views";
-    featureSection.appendChild(viewsEl);
-
-    postDiv.appendChild(featureSection);
-
-    const userLikeRef = ref(db, `likes/${postId}/users/${currentUser.uid}`);
-    const countRef = ref(db, `likes/${postId}/count`);
-    const viewRef = ref(db, `views/${postId}`);
-
-    // Likes
-    onValue(countRef, snapshot => {
-        likeCount.textContent = snapshot.exists() ? snapshot.val() + " likes" : "0 likes";
-    });
-    onValue(userLikeRef, snapshot => {
-        if(snapshot.exists() && snapshot.val() === true){
-            likeBtn.classList.add("liked");
-            likeBtn.querySelector("i").classList.replace("fa-regular","fa-solid");
-            likeBtn.querySelector(".likeText").textContent = "Curtido";
-        } else {
-            likeBtn.classList.remove("liked");
-            likeBtn.querySelector("i").classList.replace("fa-solid","fa-regular");
-            likeBtn.querySelector(".likeText").textContent = "Curtir";
-        }
-    });
-
-    likeBtn.addEventListener("click", async () => {
-        const alreadyLiked = likeBtn.classList.contains("liked");
-        const countSnap = await get(countRef);
-        let currentCount = countSnap.exists() ? countSnap.val() : 0;
-
-        if(alreadyLiked){
-            await set(userLikeRef, false);
-            await set(countRef, Math.max(currentCount-1,0));
-        } else {
-            await set(userLikeRef, true);
-            await set(countRef, currentCount+1);
-        }
-    });
-
-    // Views
-    const viewedPosts = JSON.parse(localStorage.getItem("viewedPosts") || "[]");
-    get(viewRef).then(snap => {
-        let current = snap.exists() ? snap.val() : 0;
-        if(!viewedPosts.includes(postId)){
-            current += 1;
-            set(viewRef, current);
-            viewedPosts.push(postId);
-            localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
-        }
-        viewsEl.textContent = current + " views";
-    });
-}
-
-// Carrega posts
-function loadPosts(){
-    onValue(ref(db,"posts"),snapshot=>{
-        postsContainer.innerHTML="";
-        const data=snapshot.val();
-        if(!data) return;
-        Object.entries(data).reverse().forEach(([key,post])=>{
-            const div=document.createElement("div");
-            div.className="post";
-            if(currentUser && post.uid===currentUser.uid) div.classList.add("own");
-            div.innerHTML=`
-                <div class="author"><img src="${post.avatar}">${post.author}:</div>
-                <div class="video-container"><iframe src="${post.video}" allowfullscreen></iframe></div>
-            `;
-            if(post.tags&&post.tags.length){
-                const tagsContainer=document.createElement("div");
-                tagsContainer.style.marginTop="0.5em";
-                post.tags.forEach(tag=>{
-                    const tagBox=document.createElement("span");
-                    tagBox.className="tag-box";
-                    tagBox.textContent=tag;
-                    tagsContainer.appendChild(tagBox);
-                });
-                div.appendChild(tagsContainer);
-            }
-            if(currentUser && post.uid===currentUser.uid){
-                const delBtn=document.createElement("button");
-                delBtn.textContent="Excluir";
-                delBtn.className="delete-btn";
-                delBtn.onclick=()=> remove(ref(db,"posts/"+key));
-                div.appendChild(delBtn);
-            }
-            if(currentUser) addLikeAndViewFeature(div,key);
-            postsContainer.appendChild(div);
-        });
-    });
-}
-
-// Pesquisar
-searchInput.addEventListener("input", ()=>{
-    const filter=searchInput.value.trim().toLowerCase();
-    const posts=postsContainer.querySelectorAll(".post");
-    posts.forEach(p=>{
-        const tags=Array.from(p.querySelectorAll(".tag-box")).map(t=>t.textContent.toLowerCase());
-        p.style.display = tags.some(t=>t.includes(filter)) ? "" : "none";
-    });
-});
-
-// Hamburger
-hamburger.addEventListener("click", ()=>{
-    menuContent.classList.toggle("show");
-    menuOverlay.classList.toggle("show");
-});
-menuOverlay.addEventListener("click", ()=>{
-    menuContent.classList.remove("show");
-    menuOverlay.classList.remove("show");
-});
-
-// Logout
-logoutBtn.addEventListener("click", async ()=>{
-    if(currentUser){
-        await signOut(auth);
-        menuContent.classList.remove("show");
-        menuOverlay.classList.remove("show");
-    }
-});
-</script>
-</body>
-</html>
